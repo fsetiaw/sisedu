@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+		<div class="row">
+            <div class="col-md-8">
+                <h3>Kirim Pesan Anda</h3>
+                <form action="http://118.96.57.189:8182/ToUnivSatyagama/go.getMsgTamu_v1" name="sentMessage" id="contactForm" methode="post" novalidate>
+                	
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>Nama Lengkap:</label>
+                            <input type="text" class="form-control" id="name" name="nama" required data-validation-required-message="Please enter your name.">
+                            <p class="help-block"></p>
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>Nomor Telp:</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required data-validation-required-message="Please enter your phone number.">
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>Alamat Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" required data-validation-required-message="Please enter your email address.">
+                        </div>
+                    </div>
+                    <div class="control-group form-group">
+                        <div class="controls">
+                            <label>Pesan:</label>
+                            <textarea name="pesan" rows="10" cols="100" class="form-control" id="message" required data-validation-required-message="Please enter your message" maxlength="999" style="resize:none"></textarea>
+                        </div>
+                    </div>
+                    <div id="success"></div>
+                    <!-- For success/fail messages -->
+                    <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                </form>
+            </div>
+          </div>
+</body>
+</html>

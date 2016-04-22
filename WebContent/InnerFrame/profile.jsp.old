@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="<%=Constants.getRootWeb() %>/pageLayout/1col.css" media="screen" />
+<%@ page import="java.util.Vector" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="beans.setting.Constants" %>
+<%@ page import="beans.tools.*" %>
+<%
+	beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+
+Vector v= null;  
+v = (Vector) request.getAttribute("v_profile");
+/*
+String obj_lvl=null;
+String id_kotaku=null;
+String id_obj=null;
+String kdpti=null;
+String kdjen=null;
+String kdpst=null;
+String npmhs=null;
+String nimhs=null;
+String nmmhs=null;
+String shift=null;
+String tplhr=null;
+String tglhr=null;
+String kdjek=null;
+String tahun=null;
+String smawl=null;
+String btstu=null;
+String assma=null;
+String tgmsk=null;
+String tglls=null;
+String stmhs=null;
+String stpid=null;
+String sksdi=null;
+String asnim=null;
+String aspti=null;
+String asjen=null;
+String aspst=null;
+String bistu=null;
+String peksb=null;
+String nmpek=null;
+String ptpek=null;
+String pspek=null;
+String noprm=null;
+String nokp1=null;
+String nokp2=null;
+String nokp3=null;
+String nokp4=null;
+String sttus=null;
+ListIterator li = v.listIterator();
+if(li.hasNext()) {
+		obj_lvl=(String)li.next();
+		id_kotaku=(String)li.next();
+		id_obj=(String)li.next();
+		kdpti=(String)li.next();
+		kdjen=(String)li.next();
+		kdpst=(String)li.next();
+		npmhs=(String)li.next();
+		nimhs=(String)li.next();
+		nmmhs=(String)li.next();
+		shift=(String)li.next();
+		tplhr=(String)li.next();
+		tglhr=(String)li.next();
+		kdjek=(String)li.next();
+		tahun=(String)li.next();
+		smawl=(String)li.next();
+		btstu=(String)li.next();
+		assma=(String)li.next();
+		tgmsk=(String)li.next();
+		tglls=(String)li.next();
+		stmhs=(String)li.next();
+		stpid=(String)li.next();
+		sksdi=(String)li.next();
+		asnim=(String)li.next();
+		aspti=(String)li.next();
+		asjen=(String)li.next();
+		aspst=(String)li.next();
+		bistu=(String)li.next();
+		peksb=(String)li.next();
+		nmpek=(String)li.next();
+		ptpek=(String)li.next();
+		pspek=(String)li.next();
+		noprm=(String)li.next();
+		nokp1=(String)li.next();
+		nokp2=(String)li.next();
+		nokp3=(String)li.next();
+		nokp4=(String)li.next();
+		sttus=(String)li.next();
+		
+}
+else {
+	System.out.println("vecetor kosong");
+}
+
+*/
+String v_id_obj = (String)request.getAttribute("v_id_obj");
+String v_nmmhs=(String)request.getAttribute("v_nmmhs");
+String v_npmhs=(String)request.getAttribute("v_npmhs");
+String v_nimhs=(String)request.getAttribute("v_nimhs");
+String v_obj_lvl=(String)request.getAttribute("v_obj_lvl");
+String v_kdpst=(String)request.getAttribute("v_kdpst");
+String v_kdjen=(String)request.getAttribute("v_kdjen");
+String v_smawl=(String)request.getAttribute("v_smawl");
+String v_aspti=(String)request.getAttribute("v_aspti");
+String v_aspst=(String)request.getAttribute("v_aspst");
+String v_btstu=(String)request.getAttribute("v_btstu");
+String v_kdjek=(String)request.getAttribute("v_kdjek");
+String v_nmpek=(String)request.getAttribute("v_nmpek");
+String v_ptpek=(String)request.getAttribute("v_ptpek");
+String v_stmhs=(String)request.getAttribute("v_stmhs");
+String v_stpid=(String)request.getAttribute("v_stpid");
+String v_sttus=(String)request.getAttribute("v_sttus");
+String v_email=(String)request.getAttribute("v_email");
+%>
+</head>
+<body>
+<div id="header">
+<ul>
+	<li><a href="get.profile?id_obj=<%=v_id_obj%>&nmm=<%=v_nmmhs%>&npm=<%=v_npmhs %>&obj_lvl=<%=v_obj_lvl %>&kdpst=<%=v_kdpst %>" target="_self" class="active">DATA <span>PROFIL</span></a></li>
+	<%
+	if(validUsr.isAllowTo("vbak")>0) {
+	%>
+	<li><a href="get.histPymnt?id_obj=<%=v_id_obj%>&nmm=<%=v_nmmhs%>&npm=<%=v_npmhs %>&obj_lvl=<%=v_obj_lvl %>&kdpst=<%=v_kdpst %>" target="_self">DATA<span>KEUANGAN</span></a></li>
+	<%
+	}
+	%>
+</ul>
+</div>
+<div id="content">
+	<div id="mainContent">
+		<!-- Column 1 start -->
+		<%
+		if(v.size()>0){
+			if(validUsr.isAllowTo("editDataPribadi")>0) {
+				System.out.println("profile.jsp objek level = "+v_obj_lvl);
+		%>
+				<br/>
+				<form action="get.profile" align="center">
+					<input type="hidden" value="<%=v_npmhs %>" name="npm"/><input type="hidden" value="<%=v_nimhs %>" name="nim"/>
+					<input type="hidden" value="<%=v_kdpst %>" name="kdpst" /><input type="hidden" value="<%=v_id_obj %>" name="id_obj" />
+					<input type="hidden" value="<%=v_obj_lvl %>" name="obj_lvl" /><input type="hidden" value="edit" name="cmd" />
+					<input type="submit" value="Edit Data" style="width:200px;height:50px" formtarget="_self"/>
+				</form>
+				<br/>
+		<%		
+			}
+		%>
+			
+			<p>
+			<table align="center" border="1" style="background:#d9e1e5;color:#000;width:700px">	
+				
+				<tr>
+					<td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>DATA PRIBADI</b></td><td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>ALAMAT RUMAH</b></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Nama </td><td align="center" width="250px"><%=v_nmmhs %></td><td align="center" style="padding-left:2px" colspan="2" rowspan="5"></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Gender</td><td align="center" width="250px"><%=v_kdjek %></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Status</td><td align="center" width="250px"><%=v_sttus %></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Email</td><td align="center" width="250px"><%=v_email %></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">No HP</td><td align="center" width="250px">N/A</td>
+				</tr>
+			</table>
+			</p>
+			<br />
+			<p>
+			<table align="center" border="1" style="background:#d9e1e5;color:#000;width:700px">	
+				
+				<tr>
+					<td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>INFO PEKERJAAN</b></td><td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>ALAMAT KANTOR</b></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Nama Kantor</td><td align="center" width="250px"><%=v_nmpek %><%=v_ptpek %></td><td align="center" style="padding-left:2px" colspan="2" rowspan="5"></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Jabatan</td><td align="center" width="250px">N/A</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Bidang Usaha</td><td align="center" width="250px">N/A</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Jenis </td><td align="center" width="250px">N/A</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">No Telp</td><td align="center" width="250px">single</td>
+				</tr>
+			</table>
+			</p>
+						<br />
+			<p>
+			<table align="center" border="1" style="background:#d9e1e5;color:#000;width:700px">	
+				
+				<tr>
+					<td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>INFO SPONSOR</b></td><td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>INFO KEMAHASISWAAN</b></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Nama Sponsor</td><td align="center" width="250px"></td><td align="left" width="100px" style="padding-left:2px">Status</td><td align="center" width="250px"><%= v_stmhs%></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">No Telp</td><td align="center" width="250px">Pria</td><td align="left" width="100px" style="padding-left:2px">Angkatan</td><td align="center" width="250px"><%= v_smawl%></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="2" bgcolor="#369" style="color:#fff" padding-left="2px"><b>ALAMAT SPONSOR</b></td><td align="left" width="100px" style="padding-left:2px">Batas Studi</td><td align="center" width="250px"><%= v_btstu%></td>
+				</tr>
+				<tr>
+					<td align="left" style="padding-left:2px" colspan="2" rowspan="3"></td><td align="left" width="100px" style="padding-left:2px">Tipe</td><td align="center" width="250px"><%= v_stpid%></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Asal PT</td><td align="center" width="250px"><%= v_aspti%></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" style="padding-left:2px">Asal Prodi</td><td align="center" width="250px"><%= v_aspst%></td>
+				</tr>
+			</table>
+			</p>
+			
+		<%	
+		}
+		%>
+</body>
+</html>

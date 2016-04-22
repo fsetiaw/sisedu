@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<head>
+	<title>The Perfect 3 Column Liquid Layout: No CSS hacks. SEO friendly. iPhone compatible.</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="/ToUnivSatyagama/3-column/screen.css" media="screen" />
+	<%@ page import="beans.setting.*" %>
+	<%@ page import="beans.tools.*" %>
+	<!--  jsp:useBean id="validUsr" class="beans.login.InitSessionUsr" scope="session" / -->
+	<%
+	beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+	String id_obj = request.getParameter("id_obj");
+	String nmm = request.getParameter("nmm");
+	String npm = request.getParameter("npm");
+	String obj_lvl = request.getParameter("obj_lvl");
+	String kdpst = request.getParameter("kdpst");
+	%>
+</head>
+<body>
+
+<div id="header">
+<h3>header</h3>
+
+	<ul>
+		<%
+		String target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+		System.out.println("index target="+target);
+		String uri = request.getRequestURI();
+		System.out.println("index uri="+uri);
+		String url = PathFinder.getPath(uri, target);
+		System.out.println("index url="+url);
+		%>
+		<li><a href="<%=url %>" target="inner_iframe">HOME <span>------</span></a></li>
+		<%	
+		target = Constants.getRootWeb()+"/InnerFrame/PMB/pmb_index.jsp";
+		uri = request.getRequestURI();
+		System.out.println(target+" / "+uri);
+		url = PathFinder.getPath(uri, target);
+		if(validUsr.isAllowTo("iciv")>0) {
+		%>
+		<li><a href="<%=url %>" target="inner_iframe">INSERT <span>CIVITAS BARU</span></a></li>
+		<%
+		}
+		%>
+<!-- 
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-left-menu.htm">2 Column <span>Left Menu</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-right-menu.htm">2 Column <span>Right Menu</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-double-page.htm">2 Column <span>Double Page</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-full-page.htm">1 Column <span>Full Page</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-stacked-columns.htm">Stacked <span>columns</span></a></li>
+ -->
+	</ul>
+</div>
+<div class="colmask threecol">
+	<div class="colmid">
+		<div class="colleft">
+			<div class="col1">
+				<!-- Column 1 start -->
+				<%
+				if(id_obj!=null && nmm!=null && npm!=null&&obj_lvl!=null && kdpst!=null) {
+				%>
+				<iframe src="get.histPymnt?id_obj=<%= id_obj%>&nmm=<%= nmm%>&npm=<%= npm%>&obj_lvl=<%= obj_lvl%>&kdpst=<%= kdpst%>" seamless="seamless" width="1000px" height="550px" name="inner_iframe"></iframe>
+				<%
+				}
+				else {
+				%>
+				<iframe src="InnerFrame/home.jsp" seamless="seamless" width="1000px" height="550px" name="inner_iframe"></iframe>
+				<%
+				}
+				%>
+				<!-- Column 1 end -->
+			</div>
+			<div class="col2">
+				<!-- Column 2 / left start -->
+				<p>
+					Login User,
+					<b><%=validUsr.getFullname().toUpperCase() %></b>
+				</p>
+				<%
+				if(validUsr.isAllowTo("s")>0) {
+				%>
+				<p>
+				<form action="people.search" target="inner_iframe">
+				<table>
+					<tr>
+						<td>Keyword</td>
+					</tr>
+					<tr>	
+						<td><input type="text" name="kword"/> </td>
+					</tr>
+					<tr>
+						<td><input type="submit" /> </td>
+					</tr>
+				</table>
+				</form>
+				</p>
+				<%
+				}
+				%>
+				<!-- Column 2 end -->
+			</div>
+			<div class="col3">
+				<!-- Column 3 / rightbstart -->
+				<p>three dsfsda d gsfdgsfs fs gsgsgf sg sf g fsgsfg s s gfsgs gf g sfgs</p>
+				<!-- Column 3 end -->
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<p>This page uses the <a href="http://matthewjamestaylor.com/blog/perfect-3-column.htm">Perfect 'Holy Grail' 3 Column Liquid Layout</a> by <a href="http://matthewjamestaylor.com">Matthew James Taylor</a>. View more <a href="http://matthewjamestaylor.com/blog/-website-layouts">website layouts</a> and <a href="http://matthewjamestaylor.com/blog/-web-design">web design articles</a>.</p>
+</div>
+
+</body>
+</html>

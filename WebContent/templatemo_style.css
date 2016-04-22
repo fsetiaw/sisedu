@@ -1,0 +1,489 @@
+/*
+CSS Editing : Reno Tri
+*/
+body {
+	padding: 0;
+	line-height: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	margin-top: 0;
+	margin-right: 15px;
+	margin-bottom: 0;
+	background-attachment: fixed;
+	background-color: #FFFFFF;
+	border: thin solid #999;
+}
+
+h1 {
+	margin: 0 0 25px 0;
+	padding: 10px 0 10px 15px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #ffc601;
+	border-bottom: 1px solid #b4a08a;
+	background-color: #3e698c;
+}
+
+h2 {
+	width: 230px;
+	font-size: 14px;
+	color: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 10px;
+	margin-left: -10px;
+	padding-top: 15px;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 35px;
+	height: 21px;
+	background-color: #036;
+}
+
+h3 {
+	margin: 0 0 5px 0;
+	padding: 0;
+	font-size: 12px;
+	color: #996600;
+}
+
+h4 {
+	margin: 0 0 5px 0;
+	padding: 0;
+	font-size: 11px;
+	color: #000000;
+}
+
+.rantsection {
+	height: 13px;
+	margin-bottom: 10px;
+}
+
+.rantsection img {
+	float: left;
+	height: 13px;
+	width: 13px;
+	border: 0px;
+	margin-right: 5px;
+}
+
+a:link, a:visited { color: #999999; text-decoration: none;} 
+a:active, a:hover {
+	color: #993300;
+	text-decoration: underline;
+}
+
+.more_button a{
+	clear: both;
+	text-align: center;
+	display: block;
+	width: 60px;
+	margin-bottom: 5px;
+	background: #6c5b4c;
+	border-bottom: 1px solid #a59180;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: none;
+	padding-top: 1px;
+	padding-right: 0;
+	padding-bottom: 1px;
+	padding-left: 0;
+}
+
+.download_button a{
+	float: right;
+	text-align: center;
+	width: 65px;
+	padding: 1px 0;
+	background: #6c5b4c;
+	border-bottom: 1px solid #a59180;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+img {
+	border-top-width: thin;
+	border-right-width: thin;
+	border-bottom-width: thin;
+	border-left-width: thin;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+
+
+/* ----- Form ----- */
+.form_row{
+	margin-bottom: 3px;
+}
+
+form{
+	margin: 0;
+	padding: 0;
+	text-align: right;	
+}
+
+label {
+	margin-right: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000;
+}
+
+input{
+	width: 130px;
+	height: 18px;
+	line-height: normal;
+	color: #000000;
+	border: 1px solid #000000;
+	background: #FFFFFF;
+	padding-top: 1px;
+	padding-right: 0;
+	padding-bottom: 1px;
+	padding-left: 0;
+}
+select{
+	color: #99836c;
+}
+
+.button{
+	width: 60px;
+	line-height: normal;
+
+	color:#960
+	margin: 0;
+	height: 23px;
+	background-color: #996;
+	font-weight: bold;
+}
+/* End of Form */
+
+
+#templatemo_container {
+	margin: 0px auto;
+	width: 970px;
+	background: url(images/main_background.gif) repeat-y;
+	color: #FFFFFF;
+}
+
+/*------------ Header --------------- */
+
+#templatemo_header {
+	float: left;
+	width: 970px;
+	background-color: #3e698c;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	margin: 0px;
+	padding: 0;
+	-moz-box-shadow: 0 0 8px #888;
+    -webkit-box-shadow: 0 0 8px#888;
+	box-shadow: 0 0 5px #888;
+}
+
+#templatemo_title {
+	float: left;
+	width: 280px;
+	clip: rect(20px,auto,auto,auto);
+	margin-right: 5px;
+	padding-right: 5px;
+}
+
+#templatemo_sitetitle {
+	padding: 5px;
+}
+#templatemo_sitetitle span{
+	font-weight: normal;
+	color: #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 40px;
+}
+
+#templatemo_login {
+	float: right;
+	margin-top: auto;
+	width: auto;
+}
+/* -------------- End of Header------------------ */
+
+/* --------- Banner ---------- */
+#templatemo_banner {
+	clear: both;
+	width: 970px;
+	height: 256px;
+	background-image: url(images/banner1.jpg);
+	background-repeat: no-repeat;
+}
+
+#templatemo_banner_text {
+	width: 650px;
+	padding-top: 60px;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 225px;
+}
+
+#banner_title{
+	margin: 0 0 25px 0;
+	padding: 0;
+	font-size: 20px;
+	font-weight: bold;
+	color: #ffc601;
+}
+
+#templatemo_banner_text p{
+	margin: 0 0 25px 0;
+	padding: 0;
+}
+
+/* --------- End of Banner ---------- */
+
+/*--- Menu ---*/
+#templatemo_menu{
+	float: left;
+	width: 970px;
+	height: 51px;
+	background: url(images/menu_background.gif) no-repeat;
+}
+
+#templatemo_menu ul {
+	float: left;
+	margin: 0;
+	padding: 10px 0 0 40px;
+	list-style: none;
+}
+
+#templatemo_menu ul li{
+	display: inline;
+}
+
+#templatemo_menu ul li a{
+	float: left;
+	width: 140px;
+	height: 20px;
+	margin-top: 10px;
+	padding: 0;
+	font-size: 1.1em;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	color: #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+}
+
+#templatemo_menu ul li .lastmenu{
+	border-right: none;
+}
+
+#templatemo_menu li a:hover, #templatemo_menu li .current{
+	color: #FFCC33;
+}
+/*--- End of Menu ---*/
+
+/*--- Content ---*/
+#templatemo_content {
+	float: left;
+	margin: 0;
+	padding: 0 10px;
+	width: 950px;
+	-moz-box-shadow: 0 0 10px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+}
+
+/*--- Left Column---*/
+#templatemo_left_column {
+	float: left;
+	margin: 20px 10px 0 0;
+	padding: 0px;
+	width: 235px;
+}
+
+.left_col_box {
+	margin: 0 0 25px 25px;
+	color: #AAA;	
+}
+
+.blog_box {
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #D3DAFB;
+	color: #000;
+}
+
+.blog_box h3 a{
+	font-size: 12px;
+	color: #CC3300;
+	
+}
+
+.blog_box span{
+	color: #99836c;
+}
+/*--- End of Left Column---*/
+
+/*--- Right Column---*/
+#templatemo_right_column {
+	float: left;
+	padding: 0;
+	width: 650px;
+	margin-top: 20px;
+	margin-right: 15px;
+	margin-bottom: 0;
+	margin-left: 35px;
+}
+
+.templatemo_right_panel_fullwidth {
+	float: left;
+	width: 650px;
+	color: #FFFFFF;
+	padding-top: 3px;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0px;
+}
+
+.templatemo_right_panel_fullwidth img{
+	float: left;
+	margin: 3px 10px 0 0;
+}
+
+.templatemo_right_panel_fullwidth_content {
+	float: left;
+	width: 620px;
+	text-align: justify;
+	padding-top: 25px;
+	padding-right: 15px;
+	padding-bottom: 0px;
+	padding-left: 15px;
+	margin: auto;
+}
+
+.templatemo_right_panel_fullwidth_content p{
+	text-align: justify;
+	font-size: 12px;
+}
+
+#new_released_section {
+	float: left;
+	width: 650px;
+	margin: 0 0 30px 0;
+}
+
+.new_released_box {
+	float: left;
+	width: 180px;
+	margin-top: 0;
+	margin-right: 10px;
+	margin-bottom: 0;
+	margin-left: 15px;
+	color: #CCCCCC;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: left;
+}
+
+.new_released_box img{
+	margin-bottom: 5px;
+}
+
+#news_section {
+	float: left;
+	width: 310px;
+	margin-top: 0;
+	margin-right: 15px;
+	margin-bottom: 0;
+	margin-left: 0;
+}
+
+.news_box {
+	float: left;
+	width: 280px;
+	margin: 0 15px 25px 15px;
+}
+
+.news_box img{
+	float: left;
+	width: 110px;
+	margin: 3px 10px 0 0;
+	border: 1px solid #333333;
+}
+
+.news_box p{
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+#topdownload_section {
+	float: right;
+	width: 300px;
+	padding: 0;
+	margin-top: 0;
+	margin-right: 10px;
+	margin-bottom: 0;
+	margin-left: 0;
+	background-color: #66CCFF;
+}
+
+.topdownload_box {
+	float: left;
+	width: 270px;
+	padding-bottom: 5px;
+	margin: 0 15px 10px 15px;
+	color: #24211d;
+	font-weight: bold;
+	border-bottom: 1px solid #6b5946;
+	
+}
+
+* html .topdownload_box {
+	margin: 0 15px 10px 7px;
+}
+
+.topdownload_box span{
+	font-weight: normal;
+}
+
+.title_singer{
+	float: left;
+	width: 200px;
+}
+/*--- End of Right Column---*/
+/*--- End of Content ---*/
+
+/* ----- Footer ----- */
+#templatemo_footer {
+	clear: both;
+	width: 970px;
+	text-align: center;
+	color: #FFFFFF;
+	background: #000000;
+	text-align: center;
+	margin-top: 0;
+	margin-right: 0px;
+	margin-bottom: 0;
+	margin-left: 0px;
+	padding-top: 15px;
+	padding-right: 0;
+	padding-bottom: 15px;
+	padding-left: 0;
+	-moz-box-shadow: 0 0 10px #888;
+    -webkit-box-shadow: 0 0 10px#888;
+	box-shadow: 0 0 5px #888;
+}
+
+#templatemo_footer a{
+	color: #FFFFFF;
+}
+
+#templatemo_footer a:hover{
+	color: #FFFFFF;
+}
+/* ----- End of Footer ----- */

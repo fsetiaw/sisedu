@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title>Expanding Search Input Field</title>
+  <meta name="author" content="Jake Rocheleau">
+  <link rel="shortcut icon" href="http://designshack.net/favicon.ico">
+  <link rel="icon" href="http://designshack.net/favicon.ico">
+  <link rel="stylesheet" type="text/css" media="all" href="styles.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="jsinput.js"></script>
+</head>
+
+<body>
+  <div id="topbar"><a href="http://designshack.net">Back to Design Shack</a></div>
+  <div id="w">
+    <div id="content">
+    <h1><span>CSS3 Expanding Search Input</span></h1>
+    
+    <form id="searchform" name="searchform" method="get" action="index.html">
+      <div class="fieldcontainer">
+        <input type="text" name="s" id="s" class="searchfield" placeholder="Keywords..." tabindex="1">
+        <input type="submit" name="searchbtn" id="searchbtn" value=""> 
+      </div><!-- @end .fieldcontainer -->
+    </form>
+    
+    <br><br>
+    
+    <h1><span>JavaScript Fixed-Width Input</span></h1>
+    <p>Here we check if the user has entered some text into the search field. If so, then we force the input to stay open at 100% width using JavaScript.</p>
+    <form id="searchform2" name="searchform2" method="get" action="index.html">
+      <div class="fieldcontainer">
+        <input type="text" name="s2" id="s2" class="searchfieldjs" placeholder="Keywords..." tabindex="2">
+        <input type="submit" name="search2btn" id="search2btn" value="">
+      </div>
+    </form>
+    </div><!-- @end #content -->
+  </div><!-- @end #w -->
+</body>
+</html>

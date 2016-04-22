@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<head>
+<%@ page import="beans.tools.*" %>
+<%@ page import="beans.dbase.SearchDb" %>
+<%@ page import="java.util.Vector" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="java.util.StringTokenizer" %>
+<%@page import="beans.setting.Constants"%>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="<%=Constants.getRootWeb() %>/fullPageLayout/screen.css" media="screen" />
+<%
+//System.out.println("kkkkk");
+ListIterator liSdh = null;
+ListIterator liBlm = null;
+ListIterator liCp = null;
+Vector vSeataraYgDibuka = (Vector)request.getAttribute("vSeataraYgDibuka");
+System.out.println("vSeataraYgDibukaAupdFormKrsCp size = "+vSeataraYgDibuka.size());
+Vector vSdh =(Vector) request.getAttribute("vSdh");
+String kelasSesuaiShift = request.getParameter("sesuaiShift");
+//String kelasSemuaShift = request.getParameter("semuaShift"); //sudah tidak dipakai lagi
+String targetThsms = request.getParameter("targetThsms");
+boolean notThsmsKrs = !targetThsms.equalsIgnoreCase(Checker.getThsmsKrs());
+boolean whiteList = false;
+String whiteListMode = request.getParameter("whiteListMode"); // urusan thsms, input krs diluar thsms krs
+if(whiteListMode.equalsIgnoreCase("true")) { //urusan thsms, input krs diluar thsms krs
+	whiteList = true;
+}
+//System.out.println("aturan1="+kelasSesuaiShift);
+//System.out.println("aturan2="+kelasSemuaShift);
+if(vSdh!=null && vSdh.size()>0) {
+	liSdh = vSdh.listIterator();
+}
+else {
+	vSdh =(Vector) session.getAttribute("vSdh");
+	session.removeAttribute("vSdh");
+	if(vSdh!=null && vSdh.size()>0) {
+		liSdh = vSdh.listIterator();
+	}
+	else {
+		liSdh = new Vector().listIterator();
+	}	
+}
+Vector vBlm =(Vector) request.getAttribute("vBlm");
+if(vBlm!=null && vBlm.size()>0) {
+	liBlm = vBlm.listIterator();
+}
+else {
+	vBlm =(Vector) session.getAttribute("vBlm");
+	session.removeAttribute("vBlm");
+	if(vBlm!=null && vBlm.size()>0) {
+		liBlm = vBlm.listIterator();
+	}
+	else {
+		liSdh = new Vector().listIterator();
+	}	
+}
+Vector vCp =(Vector) request.getAttribute("vCp");
+if(vCp!=null && vCp.size()>0) {
+	liCp = vCp.listIterator();
+}
+else {
+	vCp =(Vector) session.getAttribute("vCp");
+	session.removeAttribute("vCp");
+	if(vCp!=null && vCp.size()>0) {
+		liCp = vCp.listIterator();
+	}
+	else {
+		liCp = new Vector().listIterator();
+	}
+}
+Vector v = null;
+beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+boolean cpMode = false;
+if(vCp!=null && vCp.size()>0) {
+	cpMode = true;
+}
+%>
+
+
+</head>
+<body>
+<div id="header">
+<!--   include file="../innerMenu.jsp" -->
+<%@ include file="../krsKhsSubMenu.jsp" %>
+</div>
+<div class="colmask fullpage">
+	<div class="col1">
+	<!-- Column 1 start -->
+
+		<br />
+		<%
+		/*
+		liBlm = vBlm.listIterator();
+		while(liBlm.hasNext()) {
+			out.print((String)liBlm.next()+"<br/>");
+		}
+		liBlm = vBlm.listIterator();
+		
+
+		ListIterator litm = vCp.listIterator();
+		while(litm.hasNext()) {
+			String brs1 = (String)litm.next();
+		
+			if(brs1.startsWith("idkmk")) {
+
+				out.print(brs1+"<br/>");
+			}
+			else {
+				if(brs1.startsWith("shift")) {
+					out.print(brs1+"<br/>");
+					out.print("------------------------------------------------------");
+					Vector vKls = (Vector)litm.next();
+					ListIterator liKls = vKls.listIterator();
+					while(liKls.hasNext()) {
+						out.print((String)liKls.next()+"<br/>");
+					}
+				}
+			}	
+		}
+
+		out.print("vsudah<br/>");
+		while(liSdh.hasNext()) {
+			String baris = (String)liSdh.next();
+			out.println(baris+"<br/>");
+		}
+		out.print("belum<br/>");
+		while(liBlm.hasNext()) {
+			String baris = (String)liBlm.next();
+			out.println(baris+"<br/>");
+		}
+*/		
+		/*
+		msg di pas dari HistoryKrsKhs servlet, bilai msg !=null berarti blum ditentukan kurikulumnya
+		*/
+		if(!Checker.isStringNullOrEmpty(msg)) {
+			SearchDb sdb = new SearchDb();
+			String nmpst = sdb.getNmpst(kdpst);
+			//kurikulum blm ditentukan
+			Vector v_cf = validUsr.getScopeUpd7des2012("hasEditMkKurikulum");
+			if(v_cf.size()>0) {
+		%>
+		
+		<h2 align="center"><br/>Harap <a href="<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/Akademik/editTargetKurikulum.jsp?kdpst_nmpst=<%=v_kdpst%>,<%=nmpst %>" target="inner_iframe" class="active">Tentukan Kurikulum Untuk <%=nmm %> </a>Terlebih Dahulu</h2>
+		<br/>
+		<%
+			}
+			else {
+				%>
+				<h2 align="center">Kurikulum Untuk <%=nmm %> Belum Diisi oleh Tata Usaha</h2>
+				<%		
+			}
+		}
+		else {
+			
+		%>
+		
+<P>
+					
+    <form action="proses.updKrsCp" >	
+    <input type="hidden" name="id_obj" value="<%=v_id_obj %>" />
+    <input type="hidden" name="nmm" value="<%=v_nmmhs %>" />
+    <input type="hidden" name="npm" value="<%=v_npmhs %>" />
+    <input type="hidden" name="kdpst" value="<%=v_kdpst %>" />
+    <input type="hidden" name="kdjen" value="<%=v_kdjen %>" />
+    <input type="hidden" name="obj_lvl" value="<%=v_obj_lvl %>" />	
+    		<table align="center" border="1px" bordercolor="#369" style="background:#d9e1e5;color:#000;width:700px">
+		<tr>
+			<td style="background:#369;color:#fff;text-align:center;height:30px;font-size:25px" colspan="4"><label><B>PENGISIAN KRS</B></label>
+			<%
+			/* 
+			*untuk CP mode maka thsms PMB only **** updated diganti thsms krs
+			*/
+					%>
+				<select name="thsms" style="font-size:20px;">
+					<%
+						//String keter_thsms = Converter.convertThsmsKeterOnly(Checker.getThsmsKrs());
+						//String value_thsms = Converter.convertThsmsValueOnly(Checker.getThsmsKrs());
+						//System.out.println("keter_thsms="+value_thsms);
+						String keter_thsms = ""+targetThsms;
+						String value_thsms = ""+targetThsms;
+						%>
+						<option value="<%=value_thsms %>" selected="selected"><%=keter_thsms%></option>
+						<%
+					%>
+				</select>
+			</td>
+		</tr>
+    	
+	<%
+	String prevSms = "";
+	boolean adaData=false; //cuma buat flag utk submit button
+	String atPage="update Form Krs";
+	int i=0;
+	//System.out.println("v belu, size = "+vBlm.size());
+	if(vBlm!=null && vBlm.size()>0) {
+		adaData=true;
+		ListIterator li = vBlm.listIterator();
+		if(li.hasNext()) {
+			i++;
+			String baris = (String)li.next();
+			//System.out.println("barisan0="+baris);
+			StringTokenizer st = new StringTokenizer(baris,",");
+			String idkmk = st.nextToken();
+			//System.out.println("idkmkBlm="+idkmk);
+			String kdkmk = st.nextToken();
+			//System.out.println("kdkmkBlm="+kdkmk);
+			String nakmk = st.nextToken();
+			
+			//System.out.println("nakmkBlm="+nakmk);
+			String skstm = st.nextToken();
+			//System.out.println("skstmBlm="+skstm);
+			String skspr = st.nextToken();
+			//System.out.println("sksprBlm="+skspr);
+			String skslp = st.nextToken();
+			//System.out.println("skslpBlm="+skslp);
+			int sksmk = (Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue());
+			String semes = st.nextToken();
+			//System.out.println("semesBlm="+semes);
+			prevSms=""+semes;
+			
+			/*
+			String avail = "false";
+			String noKlsPll = "null";
+			String currStatus = "null";
+			String npmdos = "null";
+			String npmasdos = "null";
+			
+			String canceled = "null";
+			String kodeKelas = "null";
+			String kodeRuang = "null";
+			String kodeGedung = "null";
+			String kodeKampus = "null";
+			String tknDayTime = "null";
+			String nmmdos = "null";
+			String nmmasdos = "null";
+			String enrolled = "null";
+			String max_enrolled = "null";
+			String min_enrolled = "null";
+			*/
+			boolean avail = false;
+			String shift = "null";
+			String norutKelasParalel = "null";
+			String currStatus = "null";
+			String npmdos = "null";
+			String npmasdos = "null";
+			String canceled = "null";
+			String kodeKelas = "null";
+			String kodeRuang = "null";
+			String kodeGedung = "null";
+			String kodeKampus = "null";
+			String tknDayTime = "null";
+			String nmmdos = "null";
+			String nmmasdos = "null";
+			String enrolled = "null";
+			String maxEnrolled = "null";
+			String minEnrolled= "null";
+			String subNakmk= "null";
+			//System.out.println("es teh");					
+			
+			if(st.hasMoreTokens()) {
+				avail = true;
+			}
+					
+			
+		//out.println("<br/>"+i+"."+baris);
+		%>
+		
+		<tr>
+			<td style="background:#369;color:#fff;text-align:center;width:60px"><label><B>KODE</B> </label></td>
+			<td style="background:#369;color:#fff;text-align:left;width:330px"><label><B>MATAKULIAH</B> </label></td>
+			<td style="background:#369;color:#fff;text-align:left;width:10px"><label><B>SKS</B> </label></td>
+			<td style="background:#369;color:#fff;text-align:center;width:300px" ><label><B>INFO KELAS</B> </label></td>
+			
+			<!--  
+			td style="background:#369;color:#fff;text-align:center;" colspan="3"><label><B>SKS</B> </label></td>
+			<td style="background:#369;color:#fff;text-align:center;width:10px"><label><B>&radic;</B> </label></td>
+		</tr>
+		<tr> 
+			<td style="background:#369;color:#fff;text-align:center;width:65px"><label><B>SKS <br/>TM/PR/LP</B> </label></td>
+			<td style="background:#369;color:#fff;text-align:center;width:65px"><label><B>SHIFT</B> </label></td>
+			<td style="background:#369;color:#fff;text-align:center;width:65px"><label><B>LAPANGAN</B> </label></td
+			-->	
+		</tr>
+		<tr>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:60px" colspan="4"><label><B>MATAKULIAH SEMESTER :
+			<%
+			if(semes==null || semes.equalsIgnoreCase("null")) {
+				out.print("?? - semester tiap matakuliah belum diisi di kurikulum");
+			}
+			else {
+				out.print(semes);
+			}
+			//System.out.println("semes="+semes);
+			%>
+			</B> </label></td>
+		</tr>
+		<tr>
+			<td style="color:#000;text-align:center;width:60px"><label><B><%=kdkmk %></B> </label></td>
+			<td style="color:#000;text-align:left;width:330px"><label><B><%=nakmk.replace("tandaKoma",",") %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %></B> </label></td>
+			<!--  td style="color:#000;text-align:center;width:65px"><label><B><%=skspr %></B> </label></td>
+			<td style="color:#000;text-align:center;width:65px"><label><B><%=skslp %></B> </label></td -->
+			<td>
+			<%
+			if(!avail) {
+			%>
+			<div style="font-size:0.8em;text-align:center">KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</div>
+			<%	
+			}
+			else {
+				if((avail && !notThsmsKrs) || whiteList) {
+					boolean match = false;	
+			%>
+			<select name="kelasSelected" style="width:300px">
+				<option value="null">--PILIH KELAS--</option>
+				<%
+					while(st.hasMoreTokens()) {
+						shift = st.nextToken();
+						//System.out.println("shift="+shift);
+						norutKelasParalel = st.nextToken();
+						//System.out.println("norutKelasParalel="+norutKelasParalel);
+						currStatus = st.nextToken();
+						//System.out.println("currStatus="+currStatus);
+						npmdos = st.nextToken();
+						//System.out.println("npmdos="+npmdos);
+						npmasdos = st.nextToken();
+						//System.out.println("npmasdos="+npmasdos);
+						canceled = st.nextToken();
+						//System.out.println("canceled="+canceled);
+						kodeKelas = st.nextToken();
+						//System.out.println("kodeKelas="+kodeKelas);
+						kodeRuang = st.nextToken();
+						//System.out.println("kodeRuang="+kodeRuang);
+						kodeGedung = st.nextToken();
+						//System.out.println("kodeGedung="+kodeGedung);
+						kodeKampus = st.nextToken();
+						//System.out.println("kodeKampus="+kodeKampus);
+						tknDayTime = st.nextToken();
+						//System.out.println("tknDayTime="+tknDayTime);
+						nmmdos = st.nextToken();
+						//System.out.println("nmmdos="+nmmdos);
+						nmmasdos = st.nextToken();
+						//System.out.println("nmmasdos="+nmmasdos);
+						enrolled = st.nextToken();
+						//System.out.println("enrolled="+enrolled);
+						maxEnrolled = st.nextToken();
+						//System.out.println("maxEnrolled="+maxEnrolled);
+						minEnrolled= st.nextToken();
+						//begini karna debugging aja
+						
+						if(st.hasMoreTokens()) {
+							subNakmk= st.nextToken();
+						}
+						else {
+							subNakmk="null";
+						}
+						
+						//System.out.println("minEnrolled="+minEnrolled);
+					//System.out.println("es teh");
+;
+					/*
+					*filter disini bila ada : !kelas canceled
+					*/
+						if(kelasSesuaiShift.equalsIgnoreCase("true")) {
+							if(shift.equalsIgnoreCase(v_shift)) {
+								match = true;
+					%>
+					<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+					<%
+							}
+						}
+						else {
+							match=true;
+						%>
+						<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+						}
+					}
+					if(!match) {
+					%>
+					<option value="null" selected>KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</option>
+					<%
+					}
+				%>
+				
+			</select>
+			
+			<%
+				}
+			}
+			%>
+			</td>
+		</tr>
+		
+		<%
+			if(li.hasNext()) {
+				while(li.hasNext()) {
+					i++;
+					baris = (String)li.next();
+					//System.out.println("barisan1="+baris);
+					//System.out.println(i+".354."+baris);
+					st = new StringTokenizer(baris,",");
+					idkmk = st.nextToken();
+					//System.out.println("idkmk="+idkmk);
+					kdkmk = st.nextToken();
+					//System.out.println("kdkmk="+kdkmk);
+					nakmk = st.nextToken();
+					//System.out.println("nakmk="+nakmk);
+					skstm = st.nextToken();
+					//System.out.println("skstm="+skstm);
+					skspr = st.nextToken();
+					//System.out.println("skspr="+skspr);
+					skslp = st.nextToken();
+					//System.out.println("skslp="+skslp);
+					sksmk = (Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue());
+					semes = st.nextToken();
+					//System.out.println("semes="+semes);
+					/*
+					avail = "false";
+					noKlsPll = "null";
+					currStatus = "null";
+					npmdos = "null";
+					npmasdos = "null";
+					canceled = "null";
+					kodeKelas = "null";
+					kodeRuang = "null";
+					kodeGedung = "null";
+					kodeKampus = "null";
+					tknDayTime = "null";
+					nmmdos = "null";
+					nmmasdos = "null";
+					enrolled = "null";
+    				max_enrolled = "null";
+    				min_enrolled = "null";
+					*/
+					avail = false;
+					shift = "null";
+					norutKelasParalel = "null";
+					currStatus = "null";
+					npmdos = "null";
+					npmasdos = "null";
+					canceled = "null";
+					kodeKelas = "null";
+					kodeRuang = "null";
+					kodeGedung = "null";
+					kodeKampus = "null";
+					tknDayTime = "null";
+					nmmdos = "null";
+					nmmasdos = "null";
+					enrolled = "null";
+					maxEnrolled = "null";
+					minEnrolled= "null";
+					subNakmk="null";
+					if(st.hasMoreTokens()) {
+						
+						/*
+						avail = st.nextToken();
+						noKlsPll = st.nextToken();
+						currStatus = st.nextToken();
+						npmdos = st.nextToken();
+						npmasdos = st.nextToken();
+						canceled = st.nextToken();
+						kodeKelas = st.nextToken();
+						kodeRuang = st.nextToken();
+						kodeGedung = st.nextToken();
+						kodeKampus = st.nextToken();
+						tknDayTime = st.nextToken();
+						nmmdos = st.nextToken();
+						nmmasdos = st.nextToken();
+						enrolled = st.nextToken();
+	    				max_enrolled = st.nextToken();
+	    				min_enrolled = st.nextToken();
+	    				*/
+						avail = true;
+						
+					}
+					
+					//System.out.println("semes vs prevSms = "+semes+","+prevSms);
+					if(semes.equalsIgnoreCase("null")) {
+						%>
+						<tr>
+							<td style="color:#000;text-align:center;width:60px"><label><B><%=kdkmk %></B> </label></td>
+							<td style="color:#000;text-align:left;width:330px"><label><B><%=nakmk.replace("tandaKoma",",") %></B> </label></td>
+							<td style="color:#000;text-align:center;width:10px"><label><B><%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %></B> </label></td>
+							<!--  td style="color:#000;text-align:center;width:65px"><label><B><%=skspr %></B> </label></td>
+							<td style="color:#000;text-align:center;width:65px"><label><B><%=skslp %></B> </label></td -->
+							<td>
+			
+							<%
+							if(!avail) {
+								%>
+								<div style="font-size:0.8em;text-align:center">KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</div>
+								<!-- input type="checkbox" name="makul" value="" / -->
+								<%	
+								}
+								else {
+									if((avail && !notThsmsKrs) || whiteList) {
+										boolean match = false;
+								%>
+								<select name="kelasSelected" style="width:300px">
+									<option value="null">--PILIH KELAS--</option>
+									<%
+									while(st.hasMoreTokens()) {
+										shift = st.nextToken();
+										norutKelasParalel = st.nextToken();
+										currStatus = st.nextToken();
+										npmdos = st.nextToken();
+										npmasdos = st.nextToken();
+										canceled = st.nextToken();
+										kodeKelas = st.nextToken();
+										kodeRuang = st.nextToken();
+										kodeGedung = st.nextToken();
+										kodeKampus = st.nextToken();
+										//System.out.println("kodeKampus="+kodeKampus);
+										tknDayTime = st.nextToken();
+										nmmdos = st.nextToken();
+										nmmasdos = st.nextToken();
+										enrolled = st.nextToken();
+										maxEnrolled = st.nextToken();
+										minEnrolled= st.nextToken();
+										//begini karna debugging aja
+										
+										if(st.hasMoreTokens()) {
+											subNakmk=st.nextToken();	
+										}
+										else {
+											subNakmk="null";
+										}
+										/*
+										*filter disini bila ada : !kelas canceled
+										*/
+										if(kelasSesuaiShift.equalsIgnoreCase("true")) {
+											if(shift.equalsIgnoreCase(v_shift)) {
+												match = true;
+										%>
+											<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+										<%
+											}
+										}
+										else {
+											match=true;
+										%>
+											<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+										<%
+										}
+									}
+									if(!match) {
+										%>
+										<option value="null" selected>KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</option>
+										<%
+									}
+									%>
+									
+								</select>
+			
+								<%
+									}
+								}
+						%>
+							</td>
+						</tr>
+								<%	
+					}
+					else {
+						//System.out.println("508prevSms="+prevSms);
+						//System.out.println("508semes="+semes);
+						if((prevSms!=null && !prevSms.equalsIgnoreCase("null") && semes!=null && !semes.equalsIgnoreCase("null")) && Integer.valueOf(Converter.prepNumberString(prevSms)).intValue()==Integer.valueOf(Converter.prepNumberString(semes)).intValue()) {
+							
+					%>
+		<tr>
+			<td style="color:#000;text-align:center;width:60px"><label><B><%=kdkmk %></B> </label></td>
+			<td style="color:#000;text-align:left;width:330px"><label><B><%=nakmk.replace("tandaKoma",",") %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %></B> </label></td>
+			<!--  td style="color:#000;text-align:center;width:65px"><label><B><%=skspr %></B> </label></td>
+			<td style="color:#000;text-align:center;width:65px"><label><B><%=skslp %></B> </label></td -->
+			<td>
+			
+			<%
+			if(!avail) {
+				%>
+				<div style="font-size:0.8em;text-align:center">KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</div>
+				<!-- input type="checkbox" name="makul" value="" / -->
+				<%	
+				}
+				else {
+					if((avail && !notThsmsKrs) || whiteList) {
+						boolean match = false;
+				%>
+				<select name="kelasSelected" style="width:300px">
+					<option value="null">--PILIH KELAS--</option>
+					<%
+					while(st.hasMoreTokens()) {
+						shift = st.nextToken();
+						norutKelasParalel = st.nextToken();
+						currStatus = st.nextToken();
+						npmdos = st.nextToken();
+						npmasdos = st.nextToken();
+						canceled = st.nextToken();
+						kodeKelas = st.nextToken();
+						kodeRuang = st.nextToken();
+						kodeGedung = st.nextToken();
+						kodeKampus = st.nextToken();
+						//System.out.println("kodeKampus="+kodeKampus);
+						tknDayTime = st.nextToken();
+						nmmdos = st.nextToken();
+						nmmasdos = st.nextToken();
+						enrolled = st.nextToken();
+						maxEnrolled = st.nextToken();
+						minEnrolled= st.nextToken();
+						//begini karna debugging aja
+						
+						if(st.hasMoreTokens()) {
+							subNakmk=st.nextToken();	
+						}
+						else {
+							subNakmk="null";
+						}
+						/*
+						*filter disini bila ada : !kelas canceled
+						*/
+						if(kelasSesuaiShift.equalsIgnoreCase("true")) {
+							if(shift.equalsIgnoreCase(v_shift)) {
+								match = true;
+						%>
+								<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+							}
+						}
+						else {
+							match=true;
+						%>
+								<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+						}
+					}
+					if(!match) {
+						%>
+						<option value="null" selected>KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</option>
+						<%
+					}
+					%>
+					
+				</select>
+			
+				<%
+					}
+				}
+			%>
+			</td>
+		</tr>
+				<%		
+						}
+						else {
+						//ganti makul semester
+							prevSms=""+semes;
+					%>
+		<tr>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:60px" colspan="4"><label><B>MATAKULIAH SEMESTER :<%=semes %></B> </label></td>
+		</tr>
+		<tr>
+			<td style="color:#000;text-align:center;width:60px"><label><B><%=kdkmk %></B> </label></td>
+			<td style="color:#000;text-align:left;width:330px"><label><B><%=nakmk.replace("tandaKoma",",") %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %></B> </label></td>
+			<!--  td style="color:#000;text-align:center;width:65px"><label><B><%=skspr %></B> </label></td>
+			<td style="color:#000;text-align:center;width:65px"><label><B><%=skslp %></B> </label></td -->
+			<td>
+			<%
+			if(!avail) {
+				%>
+				<div style="font-size:0.8em;text-align:center">KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</div>
+				
+				<!-- input type="checkbox" name="makul" value="" / -->
+				<%	
+				}
+				else {
+					if((avail && !notThsmsKrs) || whiteList) {
+						boolean match = false;
+				%>
+				<select name="kelasSelected" style="width:300px">
+					<option value="null">--PILIH KELAS--</option>
+					<%
+					while(st.hasMoreTokens()) {
+						shift = st.nextToken();
+						norutKelasParalel = st.nextToken();
+						currStatus = st.nextToken();
+						npmdos = st.nextToken();
+						npmasdos = st.nextToken();
+						canceled = st.nextToken();
+						kodeKelas = st.nextToken();
+						kodeRuang = st.nextToken();
+						kodeGedung = st.nextToken();
+						kodeKampus = st.nextToken();
+						//System.out.println("kodeKampus="+kodeKampus);
+						tknDayTime = st.nextToken();
+						nmmdos = st.nextToken();
+						nmmasdos = st.nextToken();
+						enrolled = st.nextToken();
+						maxEnrolled = st.nextToken();
+						minEnrolled= st.nextToken();
+						//begini karna debugging aja
+						
+						if(st.hasMoreTokens()) {
+							subNakmk=st.nextToken();	
+						}
+						else {
+							subNakmk="null";
+						}
+						
+						/*
+						*filter disini bila ada : !kelas canceled
+						*/
+						if(kelasSesuaiShift.equalsIgnoreCase("true")) {
+							if(shift.equalsIgnoreCase(v_shift)) {
+								match = true;
+						%>
+							<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+							}
+						}
+						else {
+							match=true;
+							%>
+							<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,<%=(Integer.valueOf(skstm).intValue()+Integer.valueOf(skspr).intValue()+Integer.valueOf(skslp).intValue()) %>,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+							<%
+						}
+					}
+					if(!match) {
+						%>
+						<option value="null" selected>KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</option>
+						<%
+					}
+					%>
+					
+				</select>
+				
+				<%
+					}
+				}
+			%>
+			</td>
+		</tr>
+					<%	
+						}
+					}	
+					if(!li.hasNext()) {
+					%>
+		</table>			
+					<%
+					}
+				}	
+			}
+			else {
+			%>
+			</table>
+			<%
+			}
+		}
+	}
+		
+	//System.out.println("sampai kesini 2");
+			
+			
+	if(vSdh!=null && vSdh.size()>0) {	
+		adaData=true;
+		ListIterator li1 = vSdh.listIterator();
+	//mo di sort berdasarkan nilai terrendah
+		Vector v2 = new Vector();
+		ListIterator li2 = v2.listIterator();
+	
+		while(li1.hasNext()) {
+			//29,20091,KU 1033,PENDIDIKAN KEWARGANEGARAAN,B,3.0
+		
+			String baris = (String)li1.next();
+			StringTokenizer st = new StringTokenizer(baris,",");
+			String idkmk=st.nextToken();
+			String thsms=st.nextToken();
+			String kdkmk=st.nextToken();
+			String nakmk=st.nextToken();
+			String nlakh=st.nextToken();
+			String bobot=st.nextToken();
+
+			
+			/*
+			String avail = "false";
+			String noKlsPll = "null";
+			String currStatus = "null";
+			String npmdos = "null";
+			String npmasdos = "null";
+			String canceled = "null";
+			String kodeKelas = "null";
+			String kodeRuang = "null";
+			String kodeGedung = "null";
+			String kodeKampus = "null";
+			String tknDayTime = "null";
+			String nmmdos = "null";
+			String nmmasdos = "null";
+			String enrolled = "null";
+			String max_enrolled = "null";
+			String min_enrolled = "null";
+			*/
+			boolean avail = false;
+			String shift = "null";
+			String norutKelasParalel = "null";
+			String currStatus = "null";
+			String npmdos = "null";
+			String npmasdos = "null";
+			String canceled = "null";
+			String kodeKelas = "null";
+			String kodeRuang = "null";
+			String kodeGedung = "null";
+			String kodeKampus = "null";
+			String tknDayTime = "null";
+			String nmmdos = "null";
+			String nmmasdos = "null";
+			String enrolled = "null";
+			String maxEnrolled = "null";
+			String minEnrolled= "null";
+			String subNakmk = "null";
+			
+			if(st.hasMoreTokens()) {
+				//kasih 1 & 2 krn mo di sort biar yg avail tampil duluan
+				avail = true;
+				li2.add("1,"+baris);
+			}
+			else {
+				li2.add("2,"+baris);
+			}	
+			/*
+			if(st.hasMoreTokens()) {
+	
+				avail = st.nextToken();
+				noKlsPll = st.nextToken();
+				currStatus = st.nextToken();
+				npmdos = st.nextToken();
+				npmasdos = st.nextToken();
+				canceled = st.nextToken();
+				kodeKelas = st.nextToken();
+				kodeRuang = st.nextToken();
+				kodeGedung = st.nextToken();
+				kodeKampus = st.nextToken();
+				tknDayTime = st.nextToken();
+				nmmdos = st.nextToken();
+				nmmasdos = st.nextToken();
+				enrolled = st.nextToken();
+				max_enrolled = st.nextToken();
+				min_enrolled = st.nextToken();
+			}
+			*/
+			
+			//li2.add(bobot+","+nlakh+","+nakmk+","+kdkmk+","+thsms+","+idkmk+","+noKlsPll+","+currStatus+","+npmdos+","+npmasdos+","+canceled+","+kodeKelas+","+kodeRuang+","+kodeGedung+","+kodeKampus+","+tknDayTime+","+nmmdos+","+nmmasdos+","+enrolled+","+max_enrolled+","+min_enrolled+","+avail);
+		}
+		Collections.sort(v2);
+		li2 = v2.listIterator();
+		if(li2.hasNext()){
+		%>	
+	<table align="center" border="1px" bordercolor="#369" style="background:#d9e1e5;color:#000;width:700px">	
+		<tr>
+			<td style="background:#369;color:#fff;text-align:center;font-size:25px" colspan="6"><label><B>MATAKULIAH YANG SEDANG DAN SUDAH DIAMBIL</B></label></td>
+		</tr>
+		<tr>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:60px"><label><B>KODE</B> </label></td>
+			<td style="background:#9FADB4;color:#000;text-align:left;width:330px"><label><B>MATAKULIAH</B> </label></td>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:10px"><label><B>NILAI</B> </label></td>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:10px"><label><B>BOBOT</B> </label></td>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:10px"><label><B>THSMS</B> </label></td>
+			<td style="background:#9FADB4;color:#000;text-align:center;width:280px"><label><B>PILIHAN KELAS</B> </label></td>
+		</tr>
+	<%	
+			String baris = (String)li2.next();
+	//System.out.println("bar="+baris);
+			StringTokenizer st = new StringTokenizer(baris,",");
+			String norut=st.nextToken();//1 or 2 if 1 maka kelas avail di sms ini
+			String idkmk=st.nextToken();
+			String thsms=st.nextToken();
+			String kdkmk=st.nextToken();
+			String nakmk=st.nextToken();
+			String nlakh=st.nextToken();
+			String bobot=st.nextToken();
+			/*	
+			String baris = (String)li2.next();
+			StringTokenizer st = new StringTokenizer(baris,",");
+			String bobot=st.nextToken();
+			String nlakh=st.nextToken();
+			String nakmk=st.nextToken();
+			String kdkmk=st.nextToken();
+			String thsms=st.nextToken();
+			String idkmk=st.nextToken();
+			String noKlsPll = st.nextToken();
+			String currStatus = st.nextToken();
+			String npmdos = st.nextToken();
+			String npmasdos = st.nextToken();
+			String canceled = st.nextToken();
+			String kodeKelas = st.nextToken();
+			String kodeRuang = st.nextToken();
+			String kodeGedung = st.nextToken();
+			String kodeKampus = st.nextToken();
+			String tknDayTime = st.nextToken();
+			String nmmdos = st.nextToken();
+			String nmmasdos = st.nextToken();
+			String enrolled = st.nextToken();
+			String max_enrolled = st.nextToken();
+			String min_enrolled = st.nextToken();
+			String avail=st.nextToken();
+			*/
+			boolean avail = false;
+			String shift = "null";
+			String norutKelasParalel = "null";
+			String currStatus = "null";
+			String npmdos = "null";
+			String npmasdos = "null";
+			String canceled = "null";
+			String kodeKelas = "null";
+			String kodeRuang = "null";
+			String kodeGedung = "null";
+			String kodeKampus = "null";
+			String tknDayTime = "null";
+			String nmmdos = "null";
+			String nmmasdos = "null";
+			String enrolled = "null";
+			String maxEnrolled = "null";
+			String minEnrolled= "null";
+			String subNakmk = "null";
+			if(norut.equalsIgnoreCase("1")) {
+				//kasih 1 & 2 krn mo di sort biar yg avail tampil duluan
+				avail = true;
+				//li2.add("1,"+baris);
+			}
+			%>
+		<tr>
+			<td style="color:#000;text-align:center;width:60px"><label><B><%=kdkmk %></B> </label></td>
+			<td style="color:#000;text-align:left;width:330px"><label><B><%=nakmk.replace("tandaKoma",",") %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=nlakh %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=bobot %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=thsms %></B> </label></td>
+			<td>
+			<%
+			if(!avail) {
+				%>
+				<div style="font-size:0.8em;text-align:center">KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</div>
+				
+				<!-- input type="checkbox" name="makul" value="" / -->
+				<%	
+				}
+				else {
+					if((avail && !notThsmsKrs) || whiteList) {
+						boolean match = false;
+				%>
+				<select name="kelasSelected" style="width:300px">
+					<option value="null">--PILIH KELAS--</option>
+					<%
+					while(st.hasMoreTokens()) {
+						shift = st.nextToken();
+						norutKelasParalel = st.nextToken();
+						currStatus = st.nextToken();
+						npmdos = st.nextToken();
+						npmasdos = st.nextToken();
+						canceled = st.nextToken();
+						kodeKelas = st.nextToken();
+						kodeRuang = st.nextToken();
+						kodeGedung = st.nextToken();
+						kodeKampus = st.nextToken();
+						//System.out.println("kodeKampus="+kodeKampus);
+						tknDayTime = st.nextToken();
+						nmmdos = st.nextToken();
+						nmmasdos = st.nextToken();
+						enrolled = st.nextToken();
+						maxEnrolled = st.nextToken();
+						minEnrolled= st.nextToken();
+						//begini karna debugging aja
+						
+						if(st.hasMoreTokens()) {
+							subNakmk=st.nextToken();	
+						}
+						else {
+							subNakmk="null";
+						}
+						/*
+						*filter disini bila ada : !kelas canceled
+						*/
+						if(kelasSesuaiShift.equalsIgnoreCase("true")) {
+							if(shift.equalsIgnoreCase(v_shift)) {
+								match = true;
+						%>
+							<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,null,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+							}
+						}
+						else {
+							match=true;
+							%>
+							<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,null,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+							<%
+						}
+					}
+					if(!match) {
+						%>
+						<option value="null" selected>KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</option>
+						<%
+					}
+					%>
+					
+				</select>
+				
+				<%
+					}
+				}
+			%>
+			</td>
+		</tr>		
+		<% 	
+			if(li2.hasNext()) {
+				while(li2.hasNext()) {
+					baris = (String)li2.next();
+					st = new StringTokenizer(baris,",");
+					norut=st.nextToken();//1 or 2 if 1 maka kelas avail di sms ini
+					idkmk=st.nextToken();
+					thsms=st.nextToken();
+					kdkmk=st.nextToken();
+					nakmk=st.nextToken();
+					nlakh=st.nextToken();
+					bobot=st.nextToken();
+					/*	
+					String baris = (String)li2.next();
+					StringTokenizer st = new StringTokenizer(baris,",");
+					String bobot=st.nextToken();
+					String nlakh=st.nextToken();
+					String nakmk=st.nextToken();
+					String kdkmk=st.nextToken();
+					String thsms=st.nextToken();
+					String idkmk=st.nextToken();
+					String noKlsPll = st.nextToken();
+					String currStatus = st.nextToken();
+					String npmdos = st.nextToken();
+					String npmasdos = st.nextToken();
+					String canceled = st.nextToken();
+					String kodeKelas = st.nextToken();
+					String kodeRuang = st.nextToken();
+					String kodeGedung = st.nextToken();
+					String kodeKampus = st.nextToken();
+					String tknDayTime = st.nextToken();
+					String nmmdos = st.nextToken();
+					String nmmasdos = st.nextToken();
+					String enrolled = st.nextToken();
+					String max_enrolled = st.nextToken();
+					String min_enrolled = st.nextToken();
+					String avail=st.nextToken();
+					*/
+					avail = false;
+					shift = "null";
+					norutKelasParalel = "null";
+					currStatus = "null";
+					npmdos = "null";
+					npmasdos = "null";
+					canceled = "null";
+					kodeKelas = "null";
+					kodeRuang = "null";
+					kodeGedung = "null";
+					kodeKampus = "null";
+					tknDayTime = "null";
+					nmmdos = "null";
+					nmmasdos = "null";
+					enrolled = "null";
+					maxEnrolled = "null";
+					minEnrolled= "null";
+					subNakmk= "null";
+					if(norut.equalsIgnoreCase("1")) {
+						//kasih 1 & 2 krn mo di sort biar yg avail tampil duluan
+						avail = true;
+						//li2.add("1,"+baris);
+					}
+		%>
+		<tr>
+			<td style="color:#000;text-align:center;width:60px"><label><B><%=kdkmk %></B> </label></td>
+			<td style="color:#000;text-align:left;width:330px"><label><B><%=nakmk.replace("tandaKoma",",") %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=nlakh %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=bobot %></B> </label></td>
+			<td style="color:#000;text-align:center;width:10px"><label><B><%=thsms %></B> </label></td>
+			<td>
+			<%
+			if(!avail) {
+				%>
+				<div style="font-size:0.8em;text-align:center">KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</div>
+				
+				<!-- input type="checkbox" name="makul" value="" / -->
+				<%	
+				}
+				else {
+					if((avail && !notThsmsKrs) || whiteList) {
+						boolean match = false;
+				%>
+				<select name="kelasSelected" style="width:300px">
+					<option value="null">--PILIH KELAS--</option>
+					<%
+					while(st.hasMoreTokens()) {
+						shift = st.nextToken();
+						norutKelasParalel = st.nextToken();
+						currStatus = st.nextToken();
+						npmdos = st.nextToken();
+						npmasdos = st.nextToken();
+						canceled = st.nextToken();
+						kodeKelas = st.nextToken();
+						kodeRuang = st.nextToken();
+						kodeGedung = st.nextToken();
+						kodeKampus = st.nextToken();
+						//System.out.println("kodeKampus");
+						tknDayTime = st.nextToken();
+						nmmdos = st.nextToken();
+						nmmasdos = st.nextToken();
+						enrolled = st.nextToken();
+						maxEnrolled = st.nextToken();
+						minEnrolled= st.nextToken();
+						//begini karna debugging aja
+						
+						if(st.hasMoreTokens()) {
+							subNakmk=st.nextToken();	
+						}
+						else {
+							subNakmk="null";
+						}
+						/*
+						*filter disini bila ada : !kelas canceled
+						*/
+						if(kelasSesuaiShift.equalsIgnoreCase("true")) {
+							if(shift.equalsIgnoreCase(v_shift)) {
+								match = true;
+						%>
+							<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,null,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+							}
+						}
+						else {
+							match=true;
+							%>
+							<option value="<%=idkmk%>,<%=shift%>,<%=norutKelasParalel%>,<%=kdkmk%>,null,<%=currStatus%>,<%=npmdos%>,<%=npmasdos%>,<%=canceled%>,<%=kodeKelas%>,<%=kodeRuang%>,<%=kodeGedung%>,<%=kodeKampus%>,<%=tknDayTime%>,<%=nmmdos%>,<%=nmmasdos%>,<%=enrolled%>,<%=maxEnrolled%>,<%=minEnrolled%>"><%=Checker.pnn(subNakmk)+"; "%> Kelas #<%=norutKelasParalel%> (<%=shift%>/<%=kodeKampus %>); Jadwal:<%=tknDayTime%></option>
+						<%
+						}
+					}
+					if(!match) {
+						%>
+						<option value="null" selected>KELAS TIDAK DI TAWARKAN PADA SEMESTER INI</option>
+						<%
+					}
+					%>
+					
+				</select>
+				
+				<%
+					}
+				}
+			%>
+			</td>
+		</tr>	
+		<%	
+				}
+				%>
+	</table>			
+				<%
+			}
+			else {
+			%>
+	</table>	
+			<%
+			}
+		}
+		
+	}
+	
+
+	if((adaData && !notThsmsKrs) || whiteList)  {
+	%>
+	<table align="center" border="1px" bordercolor="#369" style="background:#d9e1e5;color:#000;width:700px">
+	<tr>
+		<td><input type="submit" value="UPDATE KRS" style="width:98%" /></td>
+	</tr>
+	</table>
+	<%
+	}
+	
+	%>
+	</form>
+	<%
+	}
+	%>
+	<!-- Column 1 end -->
+	</div>
+</div>
+</body>
+</html>

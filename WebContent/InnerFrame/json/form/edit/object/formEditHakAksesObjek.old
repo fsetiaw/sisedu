@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<head>
+<%@ page import="org.codehaus.jettison.json.JSONArray" %>
+<%@ page import="org.codehaus.jettison.json.JSONException" %>
+<%@ page import="org.codehaus.jettison.json.JSONObject" %>
+<%@ page import="beans.tools.*" %>
+<%@page import="beans.setting.Constants"%>
+<%@ page import="java.util.Vector" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="java.util.StringTokenizer" %>
+<title>Insert title here</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="<%=Constants.getRootWeb() %>/fullPageLayout/screen.css" media="screen" />
+<script type="text/javascript" src="<%=Constants.getRootWeb() %>/jquery/jquery.min.js"></script>
+</script>
+<script>
+/*
+ * 
+$(document).ready(function(){
+  $("button").click(function(){
+    $.getJSON("http://localhost:8080/com.otaku.rest/api/v1/status/usg_db/listMhs",function(result){
+      $.each(result, function(){
+        $('#div_msg').append(result[0].NMMHSMSMHS + " ");
+      });
+    });
+  });
+});
+ */
+</script>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<%
+	beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+	String targetObj = request.getParameter("targetObj");
+	//System.out.println("tob="+targetObj);
+	JSONObject jobTarget = null;
+	String tknAkses = null;
+	String tknAksesValue = null;
+	if(targetObj!=null) {
+		try {
+			String val = targetObj.replace("tandaKutip", "\"");
+			val = val.replace("tandaPagar", "#");
+			jobTarget=new JSONObject(val);
+			
+			tknAkses = jobTarget.getString("ACCESS_LEVEL");
+			tknAksesValue = jobTarget.getString("ACCESS_LEVEL_CONDITIONAL");
+		}
+		catch(JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	String aksesValue = "";
+	JSONArray jsoa = Getter.readJsonArrayFromUrl("/v1/search_cmd/obj_lvl/"+validUsr.getObjLevel());
+	JSONArray jsoaObj = Getter.readJsonArrayFromUrl("/v1/search_obj_type");
+	//String atMenu= request.getParameter("atMenu");
+	//String backTo= request.getParameter("backTo");
+	//JSONArray jsoa = Getter.readJsonArrayFromUrl("/v1/search_obj_type/"+validUsr.getIdObj()+"/hak_akses/"+scope);
+	//JSONArray jsoa = (JSONArray) session.getAttribute("jsoa");
+	//session.removeAttribute("jsoa");
+%>
+</head>
+
+<body>
+<div id="header">
+	<ul>
+		<li>
+		<%
+		String target = Constants.getRootWeb()+"/InnerFrame/json/tamplete/select/selectObj.jsp";
+		String uri = request.getRequestURI();
+		String url = PathFinder.getPath(uri, target);
+		%>
+		<a href="<%=url %>?scope=editObjParam&atMenu=editObj&backTo=<%="/InnerFrame/Parameter/dashObjekParam.jsp" %>" target="_self">GO<span>BACK</span></a>
+		<!--  a href="#" onclick="javascript:window.history.back(-1);return false;" target="_self">GO<span>BACK</span></a -->
+		</li>
+	</ul>
+</div>
+<div class="colmask fullpage">
+	<div class="col1">
+		<br />
+<%
+//System.out.println("---------------------------<br/>");
+//System.out.println(jobTarget.toString()+"<br/>");
+//System.out.println("---------------------------<br/>");
+if(jsoa!=null && jsoa.length()>0) {
+%>
+<form action="update.objParam" method="post" >
+<input type="hidden" name="targetObj" value="<%=jobTarget.toString().replace("\"", "tandaKutip") %>" />
+<table align="center" border="1px" bordercolor="#369" style="background:#d9e1e5;color:#000;width:750px">
+	<tr>
+		<td style="background:#369;color:#fff;text-align:center" colspan="4"><label><B>OBJECT EDITOR</B></label></td>
+   	</tr>
+    <tr>	
+   		<td style="background:#369;color:#fff;text-align:center;width:200px" colspan="1">KODE KOMANDO</td>
+   		<td style="background:#369;color:#fff;text-align:center;width:350px" colspan="1">KETERANGAN</td>
+   		<td style="background:#369;color:#fff;text-align:center;width:100px" colspan="1">DEPENDENCY</td>
+   		<td style="background:#369;color:#fff;text-align:center;width:100px" colspan="1">VALUE</td>
+   	</tr>	
+<%
+	for(int i=0;i<jsoa.length();i++) {
+		JSONObject job = jsoa.getJSONObject(i);
+		aksesValue = "";
+		//System.out.println(job.toString());
+%>	
+	<tr>	
+   		<td valign="top" style="text-align:left;" colspan="1"><%=job.get("CMD_NAME") %></td>
+   		<td style="text-align:left" colspan="1"><%=job.get("CMD_KETER") %></td>
+   		<td style="text-align:center" colspan="1"><%=job.get("TKN_DEPENDENCY") %></td>
+   		<td style="text-align:center" colspan="1">
+   		
+   		<%
+   		
+   		if(tknAkses!=null) {
+   			//System.out.println("tknAkses="+tknAkses);
+   			if(tknAkses.contains(job.get("CMD_NAME").toString())) {
+   				StringTokenizer st = new StringTokenizer(tknAkses,"#");
+   				boolean match = false;
+   				int urut = 0;
+   				for(;!match && st.hasMoreTokens();urut++) {
+   					String tkn = st.nextToken();
+   					if(tkn.equalsIgnoreCase(job.get("CMD_NAME").toString())) {
+   						match = true;
+   					}
+   				}
+   				
+   				st = new StringTokenizer(tknAksesValue,"#");
+   				for(int k=0;k<urut;k++) {
+   					aksesValue = st.nextToken();
+   				}
+   				//out.print(aksesValue);
+   			}	
+   		}
+   		%>
+   		<input type="hidden" name="komando" value="<%=job.get("CMD_NAME").toString() %>" />
+   		<textarea name="aksesValue" style="rows:4"><%=aksesValue %></textarea></td>
+   	</tr>
+   	<tr>
+   		<td style="text-align:center" colspan="4">
+   		<table>
+<% 
+   		for(int j=0;j<jsoaObj.length();j++) {
+			JSONObject jobo = jsoaObj.getJSONObject(j);
+%>
+			<tr>
+   				<td style="background:#369;color:#fff;text-align:left;width:225px" colspan="1"><%=jobo.get("OBJ_DESC") %></td>
+   				<td style="background:#369;color:#fff;text-align:center;width:25px" colspan="1"><%=jobo.get("OBJ_LEVEL") %></td>
+   				<td style="background:#369;color:#fff;text-align:left;width:225px" colspan="1">
+   				<%
+   				j++;
+   				boolean go = false;
+   				if(j<jsoaObj.length()) {
+   					jobo = jsoaObj.getJSONObject(j);
+	   				go = true;
+   					out.print(jobo.get("OBJ_DESC"));
+   				}	
+   				%>
+   				</td>
+   				<td style="background:#369;color:#fff;text-align:center;width:25px" colspan="1">
+   				<%
+   				if(go) {
+   					out.print(jobo.get("OBJ_LEVEL"));
+   				}	
+				%>
+				</td>
+   				<td style="background:#369;color:#fff;text-align:left;width:225px" colspan="1">
+   				<%
+   				j++;
+   				go = false;
+   				if(j<jsoaObj.length()) {
+   					jobo = jsoaObj.getJSONObject(j);
+	   				go = true;
+	   				out.print(jobo.get("OBJ_DESC"));
+   				}	
+   				%>
+   				</td>
+   				<td style="background:#369;color:#fff;text-align:center;width:25px" colspan="1">
+   				<%
+   				if(go) {
+   					out.print(jobo.get("OBJ_LEVEL"));
+   				}	
+				%>
+				</td>
+				
+   			</tr>
+   		<%
+   		}
+   		%>	
+   		</table>
+		</td>
+   	</tr>	
+   	
+<%
+//		out.print(job.toString()+"<br/>");	
+	}	
+%>
+	<tr>
+   		<td style="background:#369;color:#fff;text-align:center" colspan="4">
+   			<input type="submit" value="UPDATE" style="width:80%;height:35px" />
+   		</td>
+   	</tr>
+</table>
+</form>
+<%
+}
+	
+		
+//try {
+	
+//}
+//catch(JSONException e) {
+//	e.printStackTrace();
+//}
+
+	
+%>
+<!--  	
+<button>Get JSON data</button>
+<div id="div_msg"></div>
+--> 
+	</div>
+</div>
+		
+</body>
+</html>

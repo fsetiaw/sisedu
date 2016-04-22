@@ -1,0 +1,26 @@
+#myDiv 
+{
+height:45px;
+width:45px;
+align:center;
+}
+#myDiv img
+{
+max-width:100%; 
+max-height:100%;
+margin:auto;
+display:block;
+}
+
+#myDiv1 
+{
+height:35px;
+width:35px;
+}
+#myDiv1 img
+{
+max-width:100%; 
+max-height:100%;
+margin:auto;
+display:block;
+}

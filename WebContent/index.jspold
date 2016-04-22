@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<head>
+	<%@ page import="beans.setting.*" %>
+	<%@ page import="beans.tools.*" %>
+	<%@ page import="java.util.Vector" %>
+	<%@ page import="java.util.ListIterator" %>
+	<title>The Perfect 2 Column Liquid Layout (left menu): No CSS hacks. SEO friendly. iPhone compatible.</title>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="robots" content="index, follow" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="<%=Constants.getRootWeb() %>/2colsLayout/screen.css" media="screen" />
+	<script type="text/javascript" src="<%=Constants.getRootWeb() %>/js/breakIframe/breakIframe.js"></script>
+	
+	<%
+	beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+	System.out.println("valid usr ="+validUsr);
+	System.out.println("id_obj = "+validUsr.getIdObj());
+	/*
+	 * variable dari hasil pencarian
+	*/		
+	String id_obj = request.getParameter("id_obj");
+	String nmm = request.getParameter("nmm");
+	String npm = request.getParameter("npm");
+	String obj_lvl = request.getParameter("obj_lvl");
+	String kdpst = request.getParameter("kdpst");
+	//closing session from summary tab
+	session.removeAttribute("v_totMhs");
+	session.removeAttribute("vSum");
+	session.removeAttribute("tknYyMm");
+	session.removeAttribute("yTot");
+	session.removeAttribute("vSumPsc");
+	session.removeAttribute("yTotPsc");
+	session.removeAttribute("vHistKrsKhsForEdit");
+	session.removeAttribute("vTrnlpForEdit");
+	%>
+	<script language="JavaScript">
+	<!--
+	function resize_iframe()
+	{
+
+		var height=window.innerWidth;//Firefox
+		if (document.body.clientHeight)
+		{
+			height=document.body.clientHeight;//IE
+		}
+		//resize the iframe according to the size of the
+		//window (all these should be on the same line)
+		document.getElementById("glu").style.height=parseInt(height-
+		document.getElementById("glu").offsetTop-8)+"px";
+	}
+	// this will resize the iframe every
+	// time you change the size of the window.
+	window.onresize=resize_iframe; 
+	//Instead of using this you can use: 
+	//	<BODY onresize="resize_iframe()">
+	//-->
+	
+	<!-- script type="text/javascript" -->
+    setTimeout(function () {
+        var startY = 0;
+        var startX = 0;
+        var b = document.body;
+        b.addEventListener('touchstart', function (event) {
+            parent.window.scrollTo(0, 1);
+            startY = event.targetTouches[0].pageY;
+            startX = event.targetTouches[0].pageX;
+        });
+        b.addEventListener('touchmove', function (event) {
+            event.preventDefault();
+            var posy = event.targetTouches[0].pageY;
+            var h = parent.document.getElementById("scroller");
+            var sty = h.scrollTop;
+
+            var posx = event.targetTouches[0].pageX;
+            var stx = h.scrollLeft;
+            h.scrollTop = sty - (posy - startY);
+            h.scrollLeft = stx - (posx - startX);
+            startY = posy;
+            startX = posx;
+        });
+    }, 1000);
+    <!-- /script -->
+	
+</script>
+
+</head>
+<body>
+<div id="header">
+	<ul>
+		<%
+		String target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+		//System.out.println("index target="+target);
+		String uri = request.getRequestURI();
+		//System.out.println("index uri="+uri);
+		String url = PathFinder.getPath(uri, target);
+		//System.out.println("index url="+url);
+		%>
+		<li><a href="<%=url %>" target="inner_iframe">HOME <span><b style="color:#eee">---</b></span></a></li>
+		<%	
+		target = Constants.getRootWeb()+"/InnerFrame/PMB/pmb_index.jsp";
+		uri = request.getRequestURI();
+		System.out.println(target+" / "+uri);
+		url = PathFinder.getPath(uri, target);
+		if(validUsr.isAllowTo("iciv")>0) {
+		%>
+		<li><a href="<%=url %>" target="inner_iframe">INSERT <span>CIVITAS BARU</span></a></li>
+		<%
+		}
+	
+		Vector vTmp = validUsr.getScopeUpd7des2012("hasAkademikMenu");
+		if(vTmp!=null && vTmp.size()>0) {
+			target = Constants.getRootWeb()+"/InnerFrame/Akademik/indexAkademik.jsp";
+			uri = request.getRequestURI();
+			System.out.println(target+" / "+uri);
+			url = PathFinder.getPath(uri, target);
+			%>
+			<li><a href="<%=url %>?callerPage=<%=Constants.getRootWeb()+"/index.jsp" %>" target="inner_iframe">BIDANG<span>AKADEMIK</span></a></li>
+			<%
+		}	
+		
+		//target = Constants.getRootWeb()+"/InnerFrame/Summary/view.summary";
+		//uri = request.getRequestURI();
+		//System.out.println(target+" / "+uri);
+		//url = PathFinder.getPath(uri, target);
+		if(validUsr.isAllowTo("hasSummaryMenu")>0) {
+		%>
+		<li><a href="<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/Summary/dashSummary.jsp" target="inner_iframe">SUMMARY<span><b style="color:#eee">-</b> </span></a></li>
+		<!--  li><a href="<%=url %>" target="inner_iframe">SUMMARY<span><b style="color:#eee">---</b> </span></a></li -->
+		<%
+		}
+		
+		Vector vDwn = validUsr.getScopeUpd7des2012("hasDownloadMenu");
+		if(vDwn!=null && vDwn.size()>0) {
+			target = Constants.getRootWeb()+"/InnerFrame/Download/indexDownload.jsp";
+			uri = request.getRequestURI();
+			//System.out.println(target+" / "+uri);
+			url = PathFinder.getPath(uri, target);
+			%>
+			<li><a href="<%=url %>" target="inner_iframe">DOWNLOAD<span>UPLOAD FILE</span></a></li>
+			<%
+		}	
+		
+		Vector vSpm = validUsr.getScopeUpd7des2012("hasSpmiMenu");
+		if(vSpm!=null && vSpm.size()>0) {
+			%>
+			<li><a href="<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/Spmi/indexSpmi.jsp" target="inner_iframe">PENJAMINAN<span>MUTU</span></a></li>
+			<%
+		}
+		Vector vAna = validUsr.getScopeUpd7des2012("hasStatMenu");
+		if(vAna!=null && vAna.size()>0) {
+			%>
+			<li><a href="<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/Analisa/dashStat.jsp" target="inner_iframe">DATA<span>STATISTIK</span></a></li>
+			<%
+		}
+		Vector vTool = validUsr.getScopeUpd7des2012("hasStoredProcedureMenu");
+		if(vTool!=null && vTool.size()>0) {
+			%>
+			<li><a href="<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/StoredProcedure/dashStoredProces.jsp" target="inner_iframe">ALAT KALKULASI<span>DATA</span></a></li>
+			<%
+		}
+
+		%>
+<!-- 
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-left-menu.htm">2 Column <span>Left Menu</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-right-menu.htm">2 Column <span>Right Menu</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-double-page.htm">2 Column <span>Double Page</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-full-page.htm">1 Column <span>Full Page</span></a></li>
+		<li><a href="http://matthewjamestaylor.com/blog/perfect-stacked-columns.htm">Stacked <span>columns</span></a></li>
+ -->
+	</ul>
+	<p id="layoutdims">Selamat Datang, <%=validUsr.getFullname().toLowerCase() %> | <a href="<%=Constants.getRootWeb() %>/InnerFrame/Edit/editUsrPwd.jsp" target="inner_iframe" title="edit usr/pwd">ubah usr/password</a> | <a href="<%=Constants.getRootWeb() %>/Logout/go.logout" title="logout">logout</a></li>
+</div>
+<div class="colmask leftmenu">
+	<div class="colleft">
+		<div class="col1">
+			<!-- Main Column 1 start -->
+			<div id="scroller" style="height: 400px; width: 100%; overflow: auto;">
+<!--  iframe height="100%" id="iframe" scrolling="no" width="100%" id="iframe" src="data/testdocument.pdf" / -->
+
+			<%
+			if(id_obj!=null && nmm!=null && npm!=null&&obj_lvl!=null && kdpst!=null) {
+			%>
+				<iframe id="glu" scrolling="no" src="get.histPymnt?id_obj=<%= id_obj%>&nmm=<%= nmm%>&npm=<%= npm%>&obj_lvl=<%= obj_lvl%>&kdpst=<%= kdpst%>" seamless="seamless" width="100%" onload="resize_iframe()" name="inner_iframe"></iframe>
+			<%
+			}
+			else {
+			%>
+				<iframe id="glu" scrolling="no" src="InnerFrame/home.jsp" seamless="seamless" width="100%" onload="resize_iframe()" name="inner_iframe"></iframe>
+			<%
+			}
+			%>
+			</div>
+			<!-- Main Column 1 end -->
+		</div>
+		<div class="col2">
+			<!-- Column 2 start -->
+				<%
+					if(validUsr.isAllowTo("s")>0) {
+				%>
+				<p>
+				<form action="people.search" target="inner_iframe">
+					<table>
+						<tr>
+							<td>Keyword</td>
+						</tr>
+						<tr>	
+							<td><input type="text" name="kword"/> </td>
+						</tr>
+						<tr>
+							<td><input type="submit" /> </td>
+						</tr>
+					</table>
+				</form>
+				</p>
+				<%
+				}
+				%>
+			<!-- Column 2 end -->
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<p>This page uses the <a href="http://matthewjamestaylor.com/blog/perfect-2-column-left-menu.htm">Perfect 'Left Menu' 2 Column Liquid Layout</a> by <a href="http://matthewjamestaylor.com">Matthew James Taylor</a>. View more <a href="http://matthewjamestaylor.com/blog/-website-layouts">website layouts</a> and <a href="http://matthewjamestaylor.com/blog/-web-design">web design articles</a>.</p>
+</div>
+<script type="text/javascript" src="<%=Constants.getRootWeb() %>/js/jquery.js"></script>
+<script type="text/javascript" src="<%=Constants.getRootWeb() %>/js/modernizr.js"></script>
+	<script>
+		(function($){
+			//cache nav
+			var nav = $("#topNav");
+				
+			//add indicator and hovers to submenu parents
+			nav.find("li").each(function() {
+				if ($(this).find("ul").length > 0) {
+					$("<span>").text("").appendTo($(this).children(":first"));
+					//show subnav on hover
+					$(this).mouseenter(function() {
+						$(this).find("ul").stop(true, true).slideDown();
+					});
+						
+					//hide submenus on exit
+					$(this).mouseleave(function() {
+						$(this).find("ul").stop(true, true).slideUp();
+					});
+				}
+			});
+		})(jQuery);
+	</script>
+</body>
+</html>

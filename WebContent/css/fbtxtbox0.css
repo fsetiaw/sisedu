@@ -1,0 +1,26 @@
+#content
+{
+width:520px; height:60px;
+border:solid 2px #006699;
+font-size:14px;
+}
+#button
+{
+background-color:#006699;
+color:#ffffff;
+font-size:13px;
+font-weight:bold;
+padding:4px;
+}
+#cancel
+{
+background-color:#dedede;
+color:#000;
+font-size:13px;
+padding:4px;
+margin-left:10px;
+}
+#button_block
+{
+display:block;
+}

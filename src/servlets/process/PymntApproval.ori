@@ -1,0 +1,335 @@
+package servlets.process;
+
+import java.io.IOException;
+import beans.dbase.keu.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import beans.login.InitSessionUsr;
+import beans.setting.Constants;
+import beans.tools.Checker;
+import beans.tools.PathFinder;
+
+import java.util.ListIterator;
+import java.util.Vector;
+import java.util.StringTokenizer;
+/**
+ * Servlet implementation class PymntApproval
+ */
+@WebServlet("/PymntApproval")
+public class PymntApproval extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public PymntApproval() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String target = null;
+		HttpSession session = request.getSession(true);
+		Vector vReqAprKeu= (Vector)session.getAttribute("vReqAprKeu");  
+		String submitButtonValue = request.getParameter("somebutton");
+		String field_name = (String)session.getAttribute("fieldAndValue");
+		//System.out.println("field_name="+field_name);
+		//System.out.println("somebutton="+submitButtonValue);
+		InitSessionUsr isu = (InitSessionUsr)session.getAttribute("validUsr");
+		UpdateDbKeu udb = new UpdateDbKeu(isu.getNpm());
+		/*
+		 * sebelum update harus dicek dulu status akhirnya, krn bermain dengan session variable
+		 * jadi kalo dah ada yg duluan update, ngga perlu update (multiplr approval operator case)
+		 */
+		if(submitButtonValue.equalsIgnoreCase("tolak")) {
+			String keterDetail_besaran = udb.tolakBuktiPembayaran(field_name, vReqAprKeu);
+			if(keterDetail_besaran!=null) {
+				StringTokenizer st = new StringTokenizer(keterDetail_besaran,"||");
+				if(st.countTokens()>1) {
+					String keter = st.nextToken();//ngga kepake
+					String besaran = st.nextToken();//ngga kepake
+					
+					boolean match = false;
+					st = new StringTokenizer(field_name,"||");
+					//get id target
+		    		String element = null;
+					String value = null;
+					String content = null;
+					String alasanPenolakan = null;
+					String targetNpmhs = null;
+					String targetKdpst = null;
+		    		while(st.hasMoreTokens()) {
+		    			element = st.nextToken();
+		    			String tmpValue = st.nextToken();
+		    			//if(element.contains("kuiidReqested")) {
+		    			if(element.contains("noKuiReq")) {
+		    				//match = true;
+		    				value = ""+tmpValue;
+		    			}
+		    			if(element.contains("msgContent")) {
+		    				content = ""+tmpValue;
+		    			}
+		    			if(element.contains("targetNpmhs")) {
+		    				targetNpmhs = ""+tmpValue;
+		    			}
+		    			if(element.contains("targetKdpst")) {
+		    				targetKdpst = ""+tmpValue;
+		    			}
+		    			if(element.contains("Alasan-Penolakan")) {
+		    				alasanPenolakan = ""+tmpValue;
+		    			}
+		    		}
+		    		
+		    		//send pesan telah ditolak utk mhs, ,
+		    		String isCreatorPetugas = null;
+		    		String operNickname = isu.getObjNickNameGivenObjId();
+		    		//dibikin umum jadi kalo kepala bak dirubah ke bak aja
+		    		String operNicknameHapusKepala = null;
+		    		if(operNickname!=null) {
+		    			st = new StringTokenizer(operNickname,",");
+		    			operNicknameHapusKepala = st.nextToken();
+		    			if(operNicknameHapusKepala!=null && !Checker.isStringNullOrEmpty(operNicknameHapusKepala)) {
+		    				operNicknameHapusKepala = operNicknameHapusKepala.replace("KEPALA", "");
+		    				st = new StringTokenizer(operNicknameHapusKepala);
+		    				operNicknameHapusKepala = "";
+		    				while(st.hasMoreTokens()) {
+		    					operNicknameHapusKepala = operNicknameHapusKepala+st.nextToken();
+		    					if(st.hasMoreTokens()) {
+		    						operNicknameHapusKepala=operNicknameHapusKepala+" ";
+		    					}
+		    				}
+		    			}
+		    		}
+		    		
+		    		
+		    		if(operNickname.contains("OPERATOR")) {
+		    			isCreatorPetugas = "true";
+		    		}
+		    		else {
+		    			isCreatorPetugas = "false";
+		    		}
+		    		
+		    		String targetObjNickName = udb.getObjNicknameGivenNpmhs(targetKdpst, targetNpmhs);
+					udb.postMainTopicTargetedIndividualNpmhs(Constants.getKodePesanPengumuman()+"Proses verifikasi "+content+" telah selesai dan PEMBAYARAN BELUM DITERIMA, dikarenakan "+alasanPenolakan+", Terima Kasih", isu.getObjLevel(), isu.getIdObj(), operNicknameHapusKepala, targetObjNickName, targetNpmhs, "true", isCreatorPetugas);
+		    		
+		    		match = false;
+					ListIterator li = vReqAprKeu.listIterator();
+					//if(vReqAprKeu!=null) {
+						//System.out.println(">>vReqAprKeusize ="+vReqAprKeu.size());
+					//}
+					//else {
+						//System.out.println(">>vReqAprKeusize null");
+					//}
+					
+					while(li.hasNext() && !match) {
+						String brs = (String)li.next();
+						st = new StringTokenizer(field_name,"||");
+						String id = "";
+						while(st.hasMoreTokens()) {
+							String elemenNama = st.nextToken();
+						
+							//if(elemenNama.contains("kuiidReqested")) {
+							if(elemenNama.contains("noKuiReq")) {	
+								id = st.nextToken();
+							}
+						}	
+						//String id = st.nextToken();
+						System.out.println("field_name="+field_name);
+						System.out.println(id +" vs "+value);
+						if(id.equalsIgnoreCase(value)) {
+							li.remove();
+							match = true;
+						}
+						//System.out.println(">>"+brs);
+					}
+					
+					//if(vReqAprKeu!=null) {
+						//System.out.println(">2>vReqAprKeusize ="+vReqAprKeu.size());
+					//}
+					//else {
+						//System.out.println(">2>vReqAprKeusize null");
+					//}
+					
+					if(vReqAprKeu!=null && vReqAprKeu.size()>0) {
+						target = Constants.getRootWeb()+"/InnerFrame/Keu/requestKeuAprovalForm.jsp";
+						//target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+						//target = "get.notifications";
+						session.removeAttribute("vReqAprKeu");
+						//session.removeAttribute("vReqAprKeu");
+						//session.removeAttribute("vReqAprKeu");
+						session.setAttribute("vReqAprKeu", vReqAprKeu);
+						//session.setAttribute("vReqAprKeu", vReqAprKeu);
+						//session.setAttribute("vReqAprKeu", vReqAprKeu);
+					}
+					else {
+						//target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+						target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+						session.removeAttribute("vReqAprKeu");
+						vReqAprKeu = new Vector();
+						session.setAttribute("vReqAprKeu", vReqAprKeu);
+						//session.removeAttribute("vReqAprKeu");
+						//session.removeAttribute("vReqAprKeu");
+						//session.setAttribute("vReqAprKeu", null);
+						//session.setAttribute("vReqAprKeu", null);
+						//session.setAttribute("vReqAprKeu", null);
+					}	
+				}
+			}
+		}
+		else {
+			if(submitButtonValue.equalsIgnoreCase("terima")) {
+				int i = udb.terimaBuktiPembayaran(field_name, vReqAprKeu);
+				//jika update sukses maka remove element dgn reqidTerkait  dari vReqAprKeu
+				if(i>0) {
+					
+					boolean match = false;
+					StringTokenizer st = new StringTokenizer(field_name,"||");
+					//get id target
+		    		String element = null;
+					String value = null;
+					String content = null;
+					String targetNpmhs = null;
+					String targetKdpst = null;
+		    		while(st.hasMoreTokens()) {
+		    			element = st.nextToken();
+		    			String tmpValue = st.nextToken();
+		    			if(element.contains("noKuiReq")) {
+		    				//match = true;
+		    				value = ""+tmpValue;
+		    			}
+		    			if(element.contains("msgContent")) {
+		    				content = ""+tmpValue;
+		    			}
+		    			if(element.contains("targetNpmhs")) {
+		    				targetNpmhs = ""+tmpValue;
+		    			}
+		    			if(element.contains("targetKdpst")) {
+		    				targetKdpst = ""+tmpValue;
+		    			}
+		    		}
+		    		
+		    		//send pesan telah diterima utk mhs, ,
+		    		String isCreatorPetugas = null;
+		    		String operNickname = isu.getObjNickNameGivenObjId();
+		    		//dibikin umum jadi kalo kepala bak dirubah ke bak aja
+		    		String operNicknameHapusKepala = null;
+		    		if(operNickname!=null) {
+		    			st = new StringTokenizer(operNickname,",");
+		    			operNicknameHapusKepala = st.nextToken();
+		    			if(operNicknameHapusKepala!=null && !Checker.isStringNullOrEmpty(operNicknameHapusKepala)) {
+		    				operNicknameHapusKepala = operNicknameHapusKepala.replace("KEPALA", "");
+		    				st = new StringTokenizer(operNicknameHapusKepala);
+		    				operNicknameHapusKepala = "";
+		    				while(st.hasMoreTokens()) {
+		    					operNicknameHapusKepala = operNicknameHapusKepala+st.nextToken();
+		    					if(st.hasMoreTokens()) {
+		    						operNicknameHapusKepala=operNicknameHapusKepala+" ";
+		    					}
+		    				}
+		    			}
+		    		}
+		    		
+		    		
+		    		if(operNickname.contains("OPERATOR")) {
+		    			isCreatorPetugas = "true";
+		    		}
+		    		else {
+		    			isCreatorPetugas = "false";
+		    		}
+		    		
+		    		String targetObjNickName = udb.getObjNicknameGivenNpmhs(targetKdpst, targetNpmhs);
+					udb.postMainTopicTargetedIndividualNpmhs(Constants.getKodePesanPengumuman()+"Proses verifikasi "+content+" telah selesai dan PEMBAYARAN TELAH DITERIMA, Terima Kasih", isu.getObjLevel(), isu.getIdObj(), operNicknameHapusKepala, targetObjNickName, targetNpmhs, "true", isCreatorPetugas);
+		    		
+		    		match = false;
+					ListIterator li = vReqAprKeu.listIterator();
+					//if(vReqAprKeu!=null) {
+						//System.out.println(">>vReqAprKeusize ="+vReqAprKeu.size());
+					//}
+					//else {
+						//System.out.println(">>vReqAprKeusize null");
+					//}
+					
+					while(li.hasNext() && !match) {
+						String brs = (String)li.next();
+						st = new StringTokenizer(field_name,"||");
+						String id = "";
+						while(st.hasMoreTokens()) {
+							String elemenNama = st.nextToken();
+						
+							if(elemenNama.contains("noKuiReq")) {
+								id = st.nextToken();
+							}
+						}	
+						//String id = st.nextToken();
+						System.out.println("field_name="+field_name);
+						System.out.println(id +" vs "+value);
+						if(id.equalsIgnoreCase(value)) {
+							li.remove();
+							match = true;
+						}
+						//System.out.println(">>"+brs);
+					}
+					
+					//if(vReqAprKeu!=null) {
+						//System.out.println(">2>vReqAprKeusize ="+vReqAprKeu.size());
+					//}
+					//else {
+						//System.out.println(">2>vReqAprKeusize null");
+					//}
+					
+					if(vReqAprKeu!=null && vReqAprKeu.size()>0) {
+						target = Constants.getRootWeb()+"/InnerFrame/Keu/requestKeuAprovalForm.jsp";
+						//target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+						//target = "get.notifications";
+						session.removeAttribute("vReqAprKeu");
+						//session.removeAttribute("vReqAprKeu");
+						//session.removeAttribute("vReqAprKeu");
+						session.setAttribute("vReqAprKeu", vReqAprKeu);
+						//session.setAttribute("vReqAprKeu", vReqAprKeu);
+						//session.setAttribute("vReqAprKeu", vReqAprKeu);
+					}
+					else {
+						//target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+						target = Constants.getRootWeb()+"/InnerFrame/home.jsp";
+						session.removeAttribute("vReqAprKeu");
+						vReqAprKeu = new Vector();
+						session.setAttribute("vReqAprKeu", vReqAprKeu);
+						//session.removeAttribute("vReqAprKeu");
+						//session.removeAttribute("vReqAprKeu");
+						//session.setAttribute("vReqAprKeu", null);
+						//session.setAttribute("vReqAprKeu", null);
+						//session.setAttribute("vReqAprKeu", null);
+					}	
+				}
+			}
+		}
+		//bis di proses, redirect:
+		if(target==null || Checker.isStringNullOrEmpty(target)) {
+			target = Constants.getRootWeb()+"/get.notifications";
+		}
+		//target = Constants.getRootWeb()+"/InnerFrame/Keu/requestKeuAprovalForm.jsp";
+		String uri = request.getRequestURI();
+		String url_ff = PathFinder.getPath(uri, target);
+		request.getRequestDispatcher(url_ff).forward(request,response);
+		
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request,response);
+	}
+
+}

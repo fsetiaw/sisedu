@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<head>
+<%@ page import="beans.tools.*" %>
+<%@page import="beans.setting.Constants"%>
+<%@ page import="java.util.Vector" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="java.util.StringTokenizer" %>
+<title>Insert title here</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="<%=Constants.getRootWeb() %>/fullPageLayout/screen.css" media="screen" />
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<%
+	beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+	String callerPage = request.getParameter("callerPage");
+	System.out.println("callerPage at setTargetKdpst="+callerPage);
+	String thisPage = request.getRequestURI();
+	String cmd = ""+request.getParameter("cmd");
+	String atMenu = ""+request.getParameter("atMenu");
+	String scope = request.getParameter("scope");
+	String uri = request.getRequestURI();
+	String lockedMsg = (String)session.getAttribute("lockedMsg");	//only for requestBukakelas		
+	//System.out.println("ur at isetTargetKdpst="+uri);
+	//System.out.println("<br/>atMenu at setTargetKdpst="+atMenu);
+%>
+
+
+</head>
+<body>
+<div id="header">
+	<%
+	//Vector vSc = validUsr.getScopeUpd7des2012("allowViewKurikulum");
+	
+	//Vector vSc = validUsr.getScopeUpd7des2012(scope);
+	Vector vSc = null;
+	if(scope.contains("kurikulum")||scope.contains("kelas")||scope.contains("Kurikulum")||scope.contains("Kelas")) {
+		vSc = validUsr.getScopeUpd7des2012ProdiOnly(scope);
+		System.out.println("scope prodi only);
+	}
+	else {
+		vSc = validUsr.getScopeUpd7des2012(scope);
+	}
+	System.out.println("vscopeSize1="+vSc.size());
+	if(callerPage!=null && !Checker.isStringNullOrEmpty(callerPage)) {
+		//System.out.println("33setTargetKdpst cmd="+cmd);
+	%>
+	<ul>
+		<li><a href="<%=callerPage %>" target="inner_iframe">GO<span>BACK</span></a></li>
+	</ul>
+	<%
+
+	}
+	%>
+</div>
+<div class="colmask fullpage">
+	<div class="col1">
+		<br />
+		<!-- Column 1 start -->
+
+		<%
+		if(vSc!=null && vSc.size()>0) {
+			ListIterator liSc = vSc.listIterator();
+			String baris = (String)liSc.next();
+			StringTokenizer st = new StringTokenizer(baris);
+			String tmp = st.nextToken();
+			//if(!tmp.equalsIgnoreCase("own")){
+			if(vSc.size()>1) {
+				%>
+			<p>
+			
+			<!--  form action="get.listKelas" target="_self" -->
+			<%
+				if(cmd!=null && (cmd.equalsIgnoreCase("viewKurikulum") || cmd.equalsIgnoreCase("bukaKelas"))) {
+			%>
+			<form action="go.getListKurikulum" target="_self" >
+			<%	
+				}
+				else {
+					if(cmd!=null && cmd.equalsIgnoreCase("viewMhsPerKelas")) {
+					%>
+					<form action="go.prepMhsPerKelas?callerPage=<%=callerPage %>" target="_self" >
+					<%	
+					}
+					else {
+					%>
+					<form action="<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/Akademik/dashAkademi.jsp" target="_self" >
+					<%
+					}
+				}
+			
+				if(cmd.equalsIgnoreCase("bukaKelas")) {
+					vSc=(Vector)session.getAttribute("vScopeBukaKelas");
+					session.removeAttribute("lockedMsg");
+					session.removeAttribute("vScopeBukaKelas");
+					if(vSc==null) {
+						vSc = new Vector();
+					}
+				//liSc = vSc.listIterator();
+				}
+			
+			%>
+				
+				<input type="hidden" name="cmd" value="<%=cmd%>" /> 
+				<input type="hidden" name="atMenu" value="<%=atMenu%>" /> 
+				<input type="hidden" name="scope" value="<%=scope%>" /> 
+				<input type="hidden" name="callerPage" value="<%=thisPage%>" /> 
+				<table align="center" border="1" style="background:#d9e1e5;color:#000;">	
+				<tr>
+					<td align="center" bgcolor="#369" style="color:#fff" padding-left="2px"><b>PILIH PROGRAM STUDI</b></td>
+				</tr>	
+				<tr>	
+						<td align="left" width="100px" style="padding-left:2px">
+							<select name="kdpst_nmpst">
+				
+			</p>		
+				<%
+				liSc = vSc.listIterator();
+				while(liSc.hasNext()){
+					baris = (String)liSc.next();
+					st = new StringTokenizer(baris);
+					
+					String idObj = st.nextToken();
+					String kdpst = st.nextToken();
+					String nmpst = st.nextToken();
+					nmpst = nmpst.replaceAll("MHS", "");
+					nmpst = nmpst.replaceAll("_", " ");
+					//System.out.println();
+					String objLv = st.nextToken();
+					//System.out.println(baris);
+					%>
+								<option value="<%=kdpst %>,<%=nmpst %>"><%=nmpst %></option>
+					<%
+				}
+			%>
+							</select>
+						</td>
+					</tr>	
+					<tr>
+						<td align="right" bgcolor="#369"><input type="submit" value="Next" style="width:100px;" /></td>
+					</tr>
+				</table>
+			<%
+				if(!Checker.isStringNullOrEmpty(lockedMsg)) {
+			%>	
+				<br/>
+				<p style="text-align:center;font-weight:bold;font-size:1.5em">
+					<%= lockedMsg%>
+				</p>
+				<p style="text-align:center;font-style:italic;color:red;font-weight:bold">
+					BAGI PRODI YANG SUDAH DIAJUKAN DAN TELAH DISETUJUI, HARAP MENGAJUKAN PERMOHONAN ULANG RENCANA PEMBUKAAN KELAS PERKULIAHAN KEPADA PIMPINAN
+				</p>
+			<%
+				}
+			%>	
+			</form>	
+			<%
+			}
+			else {
+				System.out.println("vscsize="+vSc.size());
+				System.out.println("lockedMsg="+lockedMsg);
+				if(vSc.size()==1 && Checker.isStringNullOrEmpty(lockedMsg)) { //lockedMsg hubungan dengan reqBukaKelas
+					liSc = vSc.listIterator();
+				
+					baris = (String)liSc.next();
+					st = new StringTokenizer(baris);
+					String idObj = st.nextToken();
+					String kdpst = st.nextToken();
+					String nmpst = st.nextToken();
+					nmpst = nmpst.replaceAll("MHS", "");
+					nmpst = nmpst.replaceAll("_", " ");
+					//System.out.println();
+					String objLv = st.nextToken();
+				//System.out.println(baris);
+				%>
+				<meta http-equiv="refresh" content="0;url=<%=Constants.getRootWeb()+"/" %>${PageContext.ServletContext.ContextPath}/InnerFrame/Akademik/dashAkademi.jsp?kdpst_nmpst=<%=kdpst %>,<%=nmpst %>&callerPage=<%=thisPage%>&atMenu=<%=atMenu%> /">
+				<!--  meta http-equiv="refresh" content="0;url=get.listKelas?kdpst_nmpst=<%=kdpst %>,<%=nmpst %>&callerPage=<%=thisPage%> /" -->
+				<%
+				}
+				else {
+					//vscSize==1 && lockedMsg 1=NULL - reqBukaKelas
+					//bearti kasusnya 		vscSize dan sudah di locekd
+					%>
+					<p style="text-align:center;font-weight:bold;font-size:1.5em">
+					<%= lockedMsg%>
+					</p>
+					<p style="text-align:center;font-style:italic;color:red">
+					BAGI PRODI YANG SUDAH DIAJUKAN DAN TELAH DISETUJUI, HARAP MENGAJUKAN PERMOHONAN ULANG RENCANA PEMBUKAAN KELAS PERKULIAHAN KEPADA PIMPINAN
+					</p>
+					<%
+				}
+			}	
+		}
+		%>
+		
+	</div>
+</div>		
+</body>
+</html>

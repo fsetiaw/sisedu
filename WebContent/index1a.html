@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>CssCreator-->HTML5 Template</title>
+<meta charset="utf-8" />
+<meta generator="csscreator.com" />
+<style>
+html, body{ 
+ margin:0; 
+ padding:0; 
+ text-align:center; 
+} 
+
+	nav {  
+    	position: absolute;  
+    	left: 0;  
+    	width: 100%;  
+    	background: url("nav_background");  
+    	border-bottom:1px solid #000;
+	}
+	nav ul {  
+    	clear:left;
+		float:left;
+		width:100%;
+		list-style:none;
+		margin:10px 0 0 0;
+		padding:0;  
+	}
+	nav ul li {
+		display:inline;
+		list-style:none;
+		margin:0;
+		padding:0;
+	}
+	nav ul li a {
+		display:block;
+		float:left;
+		margin:0 0 0 1px;
+		padding:3px 10px;
+		text-align:center;
+		background:#eee;
+		color:#000;
+		text-decoration:none;
+		position:relative;
+		left:15px;
+		line-height:1.3em;
+	}
+	nav ul li a:hover {
+		background:#369;
+		color:#fff;
+	}
+	nav ul li a.active,
+	nav ul li a.active:hover {
+		color:#fff;
+		background:#000;
+		font-weight:bold;
+	}
+	nav ul li a span {
+		display:block;
+	}
+
+ 
+#pagewidth{ 
+ width:940px; 
+ text-align:left; 
+ margin:0 auto; 
+} 
+ 
+#leftcol{
+ width:200px; 
+ float:left; 
+ position:relative; 
+ background-color:#FFFFFF; 
+ }
+ 
+#twocols{
+ width:740px; 
+ float:right; 
+ position:relative; 
+  }
+ 
+#rightcol{
+ width:150px; 
+ float:right; 
+ position:relative; 
+ background-color:#9F8C69;
+ }
+ 
+#maincol{
+ background-color: #A9ACB3;  
+ float: left; 
+  position: relative; 
+ width:590px; 
+ }
+ 
+
+ 
+ 
+/* ******************************************************************** */ 
+/* Clearfix: http://csscreator.com/attributes/containedfloat.php        */
+/* ******************************************************************** */
+.clearfix:after {
+ content: "."; 
+ display: block; 
+height: 0; 
+ clear: both; 
+ visibility: hidden;
+ }
+ 
+.clearfix{display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix{height: 1%;}
+.clearfix{display: block;}
+/* End hide from IE-mac */  
+
+
+ 
+ 
+/* ******************************************************************** */ 
+/*                      printer styles                                  */ 
+/* ******************************************************************** */ 
+     
+ @media print{ 
+/*hide the left column when printing*/ 
+#leftcol{display:none;} 
+
+/*hide the right column when printing*/ 
+#rightcol{display:none;} 
+#twocols, #maincol{width:100%; float:none;}
+}
+</style>
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- Please link back to http://csscreator.com --><link rel="stylesheet" href="1175686.css" type="text/css" />
+</head>
+<body>
+	<nav>  
+        <ul>
+			<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-right-menu.htm">2 Column <span>Right Menu</span></a></li>
+			<li><a href="http://matthewjamestaylor.com/blog/perfect-2-column-double-page.htm">2 Column <span>Double Page</span></a></li>
+			<li><a href="http://matthewjamestaylor.com/blog/perfect-full-page.htm">1 Column <span>Full Page</span></a></li>
+			<li><a href="http://matthewjamestaylor.com/blog/perfect-stacked-columns.htm">Stacked <span>columns</span></a></li>
+		</ul>
+    </nav>
+<div id="pagewidth" >
+	<div id="wrapper" class="clearfix">
+		<div id="twocols"> 
+			<section id="maincol"><h1>Main Content Column</h1></section>
+			<section id="rightcol"> <h2>right Column</h2></section>
+		</div> 
+		<div id="leftcol"> <h2>Left Column</h2></div>
+	</div>
+</div>
+</body>
+</html>

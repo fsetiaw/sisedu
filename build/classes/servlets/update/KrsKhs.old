@@ -1,0 +1,636 @@
+package servlets.update;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import beans.dbase.*;
+import beans.folder.FolderManagement;
+import beans.login.InitSessionUsr;
+import beans.setting.Constants;
+import beans.tools.Checker;
+import beans.tools.PathFinder;
+import java.util.LinkedHashSet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import java.sql.Connection;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+import java.util.Vector;
+import java.util.ListIterator;
+import java.util.StringTokenizer;
+/**
+ * Servlet implementation class KrsKhs
+ */
+@WebServlet("/KrsKhs")
+public class KrsKhs extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+//    Connection con;
+//    DataSource ds;
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+//    public KrsKhs() {
+//        super();
+        // TODO Auto-generated constructor stub
+//    }
+	public void init(ServletConfig config) throws ServletException {
+	
+		super.init(config);
+		/*	
+		Context initContext = null;
+		Context envContext = null;
+	    try {
+	      // Look up the JNDI data source only once at init time
+    		initContext  = new InitialContext();
+    		envContext  = (Context)initContext.lookup("java:/comp/env");
+    		ds = (DataSource)envContext.lookup("jdbc"+beans.setting.Constants.getDbschema());
+    		
+    		envContext.close();
+    		initContext.close();
+    		if(ds==null) {
+    			throw new ServletException("missing data source");
+    		}		
+	    }
+	    catch (NamingException e) {
+	      e.printStackTrace();
+	    }
+	    */
+	  }
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//String npmhs = request.getParameter("npmhs");
+		//String kdpst = request.getParameter("kdpst");
+		//HttpSession session = request.getSession(true);
+		response.setContentType("text/html");
+	    PrintWriter out = response.getWriter();
+	    HttpSession session = request.getSession(true);
+		InitSessionUsr isu = (InitSessionUsr)session.getAttribute("validUsr");
+		//dibawah ini adalah info target bukan operator
+		String objId = request.getParameter("id_obj");
+		String nmm = request.getParameter("nmm");
+		String npm = request.getParameter("npm");
+		String kdpst = request.getParameter("kdpst");
+		String obj_lvl =  request.getParameter("obj_lvl");
+		//System.out.println("obj_lvl="+obj_lvl);
+		String cmd =  request.getParameter("cmd");
+		String targetThsms = request.getParameter("targetThsms");
+		int norut = isu.isAllowTo("viewKrs");
+		int norut_upd_shift = isu.isAllowTo("updShift");
+
+		if(isu.isUsrAllowTo("viewKrs", npm, obj_lvl)) {
+			//System.out.println("alow view krs");
+			FolderManagement folder = new FolderManagement(isu.getDbSchema(),kdpst,npm);
+			folder.cekAndCreateFolderIfNotExist();
+			Vector v = isu.tryGetInfo(norut,Integer.valueOf(obj_lvl).intValue(),npm,"viewKrs",kdpst);
+			if(v!=null && v.size()==0) {
+				//System.out.println("v size = 0");
+				String target = Constants.getRootWeb()+"/ErrorPage/NoDataOrRight.jsp";
+				////System.out.println(target);
+				String uri = request.getRequestURI();
+				//System.out.println(uri);
+				String url_ff = PathFinder.getPath(uri, target);
+				//System.out.println(url_ff);
+				
+				request.getRequestDispatcher(url_ff).forward(request,response);
+			}
+			else {
+				System.out.println("krskhs");
+				//update ada di 2 tmp = ProfileCivitas.java && HistoryBakCivitas.java
+				ListIterator li = v.listIterator();
+				String v_obj_lvl=(String)li.next();
+				request.setAttribute("v_obj_lvl", v_obj_lvl);
+				String v_id_kotaku=(String)li.next();
+				request.setAttribute("v_id_kotaku", v_id_kotaku);
+				String v_id_obj=(String)li.next();
+				request.setAttribute("v_id_obj", v_id_obj);
+				String v_kdpti=(String)li.next();
+				request.setAttribute("v_kdpti", v_kdpti);
+				String v_kdjen=(String)li.next();
+				request.setAttribute("v_kdjen", v_kdjen);
+				String v_kdpst=(String)li.next();
+				request.setAttribute("v_kdpst", v_kdpst);
+				String v_npmhs=(String)li.next();
+				request.setAttribute("v_npmhs", v_npmhs);
+				String v_nimhs=(String)li.next();
+				request.setAttribute("v_nimhs", v_nimhs);
+				String v_nmmhs=(String)li.next();
+				request.setAttribute("v_nmmhs", v_nmmhs);
+				String v_shift=(String)li.next();
+				request.setAttribute("v_shift", v_shift);
+				String v_tplhr=(String)li.next();
+				request.setAttribute("v_tplhr", v_tplhr);
+				String v_tglhr=(String)li.next();
+				request.setAttribute("v_tglhr", v_tglhr);
+				String v_kdjek=(String)li.next();
+				request.setAttribute("v_kdjek", v_kdjek);
+				String v_tahun=(String)li.next();
+				request.setAttribute("v_tahun", v_tahun);
+				String v_smawl=(String)li.next();
+				request.setAttribute("v_smawl", v_smawl);
+				String v_btstu=(String)li.next();
+				request.setAttribute("v_btstu", v_btstu);
+				String v_assma=(String)li.next();
+				request.setAttribute("v_assma", v_assma);
+				String v_tgmsk=(String)li.next();
+				request.setAttribute("v_tgmsk", v_tgmsk);
+				String v_tglls=(String)li.next();
+				request.setAttribute("v_tglls", v_tglls);
+				String v_stmhs=(String)li.next();
+				request.setAttribute("v_stmhs", v_stmhs);
+				String v_stpid=(String)li.next();
+				request.setAttribute("v_stpid", v_stpid);
+				String v_sksdi=(String)li.next();
+				request.setAttribute("v_sksdi", v_sksdi);
+				String v_asnim=(String)li.next();
+				request.setAttribute("v_asnim", v_asnim);
+				String v_aspti=(String)li.next();
+				request.setAttribute("v_aspti", v_aspti);
+				String v_asjen=(String)li.next();
+				request.setAttribute("v_asjen", v_asjen);
+				String v_aspst=(String)li.next();
+				request.setAttribute("v_aspst", v_aspst);
+				String v_bistu=(String)li.next();
+				request.setAttribute("v_bistu", v_bistu);
+				String v_peksb=(String)li.next();
+				request.setAttribute("v_peksb", v_peksb);
+				String v_nmpek=(String)li.next();
+				request.setAttribute("v_nmpek", v_nmpek);
+				String v_ptpek=(String)li.next();
+				request.setAttribute("v_ptpek", v_ptpek);
+				String v_pspek=(String)li.next();
+				request.setAttribute("v_pspek", v_pspek);
+				String v_noprm=(String)li.next();
+				request.setAttribute("v_noprm", v_noprm);
+				String v_nokp1=(String)li.next();
+				request.setAttribute("v_nokp1", v_nokp1);
+				String v_nokp2=(String)li.next();
+				request.setAttribute("v_nokp2", v_nokp2);
+				String v_nokp3=(String)li.next();
+				request.setAttribute("v_nokp3", v_nokp3);
+				String v_nokp4=(String)li.next();
+				request.setAttribute("v_nokp4", v_nokp4);
+				String v_sttus=(String)li.next();
+				request.setAttribute("v_sttus", v_sttus);
+				String v_email=(String)li.next();
+				request.setAttribute("v_email", v_email);
+				String v_nohpe=(String)li.next();
+				request.setAttribute("v_nohpe", v_nohpe);
+   				String v_almrm=(String)li.next();
+				request.setAttribute("v_almrm", v_almrm);
+				String v_kotrm=(String)li.next();
+				request.setAttribute("v_kotrm", v_kotrm);
+   				String v_posrm=(String)li.next();
+				request.setAttribute("v_posrm", v_posrm);
+   				String v_telrm=(String)li.next();
+				request.setAttribute("v_telrm", v_telrm);
+   				String v_almkt=(String)li.next();
+				request.setAttribute("v_almkt", v_almkt);
+				String v_kotkt=(String)li.next();
+				request.setAttribute("v_kotkt", v_kotkt);
+   				String v_poskt=(String)li.next();
+				request.setAttribute("v_poskt", v_poskt);
+   				String v_telkt=(String)li.next();
+				request.setAttribute("v_telkt", v_telkt);
+   				String v_jbtkt=(String)li.next();
+				request.setAttribute("v_jbtkt", v_jbtkt);
+   				String v_bidkt=(String)li.next();
+				request.setAttribute("v_bidkt", v_bidkt);
+   				String v_jenkt=(String)li.next();
+				request.setAttribute("v_jenkt", v_jenkt);
+   				String v_nmmsp=(String)li.next();
+				request.setAttribute("v_nmmsp", v_nmmsp);
+   				String v_almsp=(String)li.next();
+				request.setAttribute("v_almsp", v_almsp);
+   				String v_possp=(String)li.next();
+				request.setAttribute("v_possp", v_possp);
+				String v_kotsp=(String)li.next();
+				request.setAttribute("v_kotsp", v_kotsp);
+				String v_negsp=(String)li.next();
+				request.setAttribute("v_negsp", v_negsp);
+   				String v_telsp=(String)li.next();
+				request.setAttribute("v_telsp", v_telsp);
+				String v_neglh=(String)li.next();
+				request.setAttribute("v_neglh", v_neglh);
+				String v_agama=(String)li.next();
+				request.setAttribute("v_agama", v_agama);
+				
+				request.setAttribute("v_profile", v);
+				request.setAttribute("atr_name", "atr_val");
+				String target="";
+		
+				Vector vHistKrsKhs = (Vector)session.getAttribute("vHistKrsKhsForEdit");
+				Vector vTrnlp =(Vector) session.getAttribute("vTrnlpForEdit");
+		
+		
+				if(cmd!=null&&cmd.equalsIgnoreCase("insertKrs")&&norut_upd_shift>0&&(v_shift==null||v_shift.equalsIgnoreCase("null")||v_shift.equalsIgnoreCase("n/a"))) {
+					//kurikulum mahasiswa belum ditentukan
+					//System.out.println("siap forward");
+					System.out.println("edit shift");
+					target = Constants.getRootWeb()+"/InnerFrame/formUpdShift.jsp";
+					String uri = request.getRequestURI();
+					String url = PathFinder.getPath(uri, target);
+					request.getRequestDispatcher(url+"?id_obj="+objId+"&nmm="+nmm+"&npm="+npm+"&obj_lvl="+obj_lvl+"&kdpst="+kdpst+"&cmd="+cmd).forward(request,response);
+					
+				}
+				else {
+					//System.out.println("masuk else");
+					SearchDb sdb = new SearchDb();
+					String idkur = sdb.getIndividualKurikulum(kdpst, npm);
+					System.out.println("idkur="+idkur);
+					//if((idkur==null || idkur.equalsIgnoreCase("null"))) {
+					//	target = Constants.getRootWeb()+"/InnerFrame/EditKrsKhs.jsp";
+					//	String uri = request.getRequestURI();
+					//	String url = PathFinder.getPath(uri, target);
+					//	request.getRequestDispatcher(url+"?msg=Harap Tentukan Kurikulum Untuk "+nmm+" Terlebih Dahulu").forward(request,response);
+					//}
+					
+					v = sdb.getListMatakuliahDalamKurikulum(kdpst,idkur);
+					//if(v)
+					//System.out.println("v-size="+v.size());
+					//li = v.listIterator();
+			//	get kdkmk
+					Vector vSdh = new Vector();
+					Vector vBlm = new Vector();
+					ListIterator liS = vSdh.listIterator();
+					ListIterator liB = vBlm.listIterator();
+					int i=0;
+					System.out.println("okay");
+					if(v!=null && v.size()>0) {
+						li = v.listIterator();
+						System.out.println("okay1="+ v.size());
+						while(li.hasNext()) {
+							i++;
+				//System.out.println("kode"+i);
+							String idkmk = (String)li.next();
+							String kdkmk = (String)li.next();
+							String nakmk = (String)li.next();
+							String skstm = (String)li.next();
+							String skspr = (String)li.next();
+							String skslp = (String)li.next();
+							String kdwpl = (String)li.next();
+							String jenis = (String)li.next();
+							String stkmk = (String)li.next();
+							String nodos = (String)li.next();
+							String semes = (String)li.next();
+							
+				//		cek apa ada di trnlp
+							boolean match = false;
+							System.out.println("match1="+match);
+							if(vTrnlp!=null && vTrnlp.size()>0) {
+								ListIterator lip = vTrnlp.listIterator();
+								while(lip.hasNext() && !match) {
+									String thsmsp = (String)lip.next();
+									String kdkmkp = (String)lip.next();
+									String nakmkp = (String)lip.next();
+									String nlakhp = (String)lip.next();
+									String bobotp = (String)lip.next();
+									String kdaslp = (String)lip.next();
+									String nmaslp = (String)lip.next();
+									String sksmkp = (String)lip.next();
+									String totSksTransferedp = (String)lip.next();
+									String sksas = (String)lip.next();
+									String transferred = (String)lip.next();
+									//	System.out.println("trans ="+kdkmk+" vs "+kdkmkp);
+									if(kdkmk.equalsIgnoreCase(kdkmkp)) {
+										match = true;
+										liS.add(idkmk+","+thsmsp+","+kdkmkp+","+nakmkp+","+nlakhp+","+bobotp);
+									//	li.remove();
+									}
+								}
+							}	
+						//jika di tenlp tidak ada , cek di trnlm
+							System.out.println("match2="+match);
+							if(!match) {
+								if(vHistKrsKhs!=null && vHistKrsKhs.size()>0) {
+									ListIterator liHist = vHistKrsKhs.listIterator();
+									while(liHist.hasNext() && !match) {
+										String thsmsh=(String)liHist.next();
+										String kdkmkh=(String)liHist.next();
+										String nakmkh=(String)liHist.next();
+										String nlakhh=(String)liHist.next();
+										String boboth=(String)liHist.next();
+										String sksmkh=(String)liHist.next();
+										String kelash=(String)liHist.next();
+										String sksemh=(String)liHist.next();
+										String nlipsh=(String)liHist.next();
+										String skstth=(String)liHist.next();
+										String nlipkh=(String)liHist.next();
+										String shift=(String)liHist.next();
+										String krsdown=(String)liHist.next();
+										String khsdown=(String)liHist.next();
+										String bakprove=(String)liHist.next();
+										String paprove=(String)liHist.next();
+										String note=(String)liHist.next();
+										String lock=(String)liHist.next();
+										String baukprove=(String)liHist.next();
+							//	System.out.println("history ="+kdkmk+" vs "+kdkmkh);
+										if(kdkmk.equalsIgnoreCase(kdkmkh)) {
+											match = true;
+											liS.add(idkmk+","+thsmsh+","+kdkmkh+","+nakmk+","+nlakhh+","+boboth);
+								//	li.remove();
+										}	
+									}
+								}
+							}
+							System.out.println("match3="+match);
+							if(!match) {
+								System.out.println("no match");
+								liB.add(idkmk+","+kdkmk+","+nakmk+","+skstm+","+skspr+","+skslp+","+semes);
+							}
+							else {
+								System.out.println("match");
+							}
+						}
+						vBlm = new Vector(new LinkedHashSet(vBlm));
+						System.out.println("1.vBln="+vBlm.size());
+						vSdh = new Vector(new LinkedHashSet(vSdh));
+						request.setAttribute("vBlm", vBlm);
+						request.setAttribute("vSdh", vSdh);
+						//Vector vBlmCp = new Vector();
+						//ListIterator liBlmCp = vBlmCp.listIterator();
+						//Vector vSdhCp = new Vector();
+						//ListIterator liSdhCp = vSdhCp.listIterator();
+						/*
+						 * updated: 
+						 * get list kelas dari kelas_pool 
+						 * modify vBlm & vSdh add token avail
+						 */
+						//Vector vCp = sdb.getListMakulDalamClassPool(Checker.getThsmsPmb(),kdpst);
+						
+						//Vector vCp = sdb.getListMakulDalamClassPoolVer2(Checker.getThsmsPmb(),kdpst);
+						Vector vCp = sdb.getListMakulDalamClassPoolVer2(targetThsms,kdpst);
+						
+						//getListMakulDalamClassPoolVer2
+						String tmp = "";
+						if(vCp!=null && vCp.size()>0) {
+							if(vBlm!=null && vBlm.size()>0) {
+								ListIterator liBlm = vBlm.listIterator();
+								while(liBlm.hasNext()) {
+									String brs = (String)liBlm.next();
+									StringTokenizer st=new StringTokenizer(brs,",");
+									String idkmk=st.nextToken();
+									String kdkmk=st.nextToken();
+									String nakmk=st.nextToken();
+									String skstm=st.nextToken();
+									String skspr=st.nextToken();
+									String skslp=st.nextToken();
+									String semes=st.nextToken();
+									//boolean match = false;
+									String idkmkCp = "";
+    								String shiftCp = "";
+									ListIterator liCp = vCp.listIterator();
+									//boolean
+									while(liCp.hasNext()) {
+										String brs1 = (String)liCp.next();
+    									if(brs1.startsWith("idkmk")) {
+    										if(!idkmkCp.equalsIgnoreCase(idkmk)) {
+    											tmp = "";
+    										}	
+    										StringTokenizer st1 = new StringTokenizer(brs1,",");
+    										st1.nextToken();
+    										idkmkCp = st1.nextToken();
+    									}
+    									else {
+    										if(brs1.startsWith("shift")) {
+    											StringTokenizer st1 = new StringTokenizer(brs1,",");
+        										st1.nextToken();
+        										shiftCp = st1.nextToken();
+        										Vector vKls = (Vector)liCp.next();
+            									ListIterator liKls = vKls.listIterator();
+            									//String tmp = "";
+            									//boolean first = true;
+            									boolean match = false;
+            									while(liKls.hasNext()) {
+            										if(idkmkCp.equalsIgnoreCase(idkmk)) {
+            											match = true;
+            											brs1 = (String)liKls.next();
+            											if(Checker.isStringNullOrEmpty(tmp)) {
+            												tmp = brs1;
+            											}
+            											else {
+            												tmp = tmp +","+ brs1;
+            											}
+            										}	
+            										else {
+            											liKls.next();
+            										}
+            										//System.out.println(idkmk+" "+shiftCp+" "+brs1);
+            									}
+            									if(match) {
+            										liBlm.set(brs+","+tmp);
+            									}	
+    										}
+    									}
+    									/*
+    									String idkmkCp = (String)liCp.next();
+										String shiftCp = (String)liCp.next();
+										String noKlsPll = (String)liCp.next();
+									    String currStatus = (String)liCp.next();
+					    				String npmdos = (String)liCp.next();
+					    				String npmasdos = (String)liCp.next();
+					    				
+					    				String canceled =  (String)liCp.next();
+					    				String kodeKelas =  (String)liCp.next();
+					    				String kodeRuang =  (String)liCp.next();
+					    				String kodeGedung =  (String)liCp.next();
+					    				String kodeKampus =  (String)liCp.next();
+					    				String tknDayTime =  (String)liCp.next();
+					    				String nmmdos =  (String)liCp.next();
+					    				String nmmasdos =  (String)liCp.next();
+					    				String enrolled =  (String)liCp.next();
+					    				String max_enrolled =  (String)liCp.next();
+					    				String min_enrolled =  (String)liCp.next();
+					    				
+					    				String kdkmkCp = (String)liCp.next();
+										String nakmkCp = (String)liCp.next();
+										String skstmCp = (String)liCp.next();
+										String sksprCp = (String)liCp.next();
+										String skslpCp = (String)liCp.next();
+										String kdwplCp = (String)liCp.next();
+										String jenisCp = (String)liCp.next();
+										String stkmkCp = (String)liCp.next();
+										String nodosCp = (String)liCp.next();
+										if(idkmk.equalsIgnoreCase(idkmkCp) && (v_shift.equalsIgnoreCase(shiftCp))) {
+											match = true;
+											liBlm.set(brs+",avail,"+noKlsPll+","+currStatus+","+npmdos+","+npmasdos+","+canceled+","+kodeKelas+","+kodeRuang+","+kodeGedung+","+kodeKampus+","+tknDayTime+","+nmmdos+","+nmmasdos+","+enrolled+","+max_enrolled+","+min_enrolled);
+											//liBlmCp.add(brs);
+										}	
+										*/
+									}
+								}
+							}
+							
+							if(vSdh!=null && vSdh.size()>0) {
+								ListIterator liSdh = vSdh.listIterator();
+								while(liSdh.hasNext()) {
+									//boolean match = false;
+									String brs = (String)liSdh.next();
+									StringTokenizer st=new StringTokenizer(brs,",");
+								//liS.add(idkmk+","+thsmsp+","+kdkmkp+","+nakmkp+","+nlakhp+","+bobotp);
+									String idkmk=st.nextToken();
+									String thsms=st.nextToken();
+									String kdkmk=st.nextToken();
+									String nakmk=st.nextToken();
+									String nlakh=st.nextToken();
+									String bobot=st.nextToken();
+									//ListIterator liCp = vCp.listIterator();
+									String idkmkCp = "";
+    								String shiftCp = "";
+									ListIterator liCp = vCp.listIterator();
+									while(liCp.hasNext()) {
+										String brs1 = (String)liCp.next();
+    									if(brs1.startsWith("idkmk")) {
+    										if(!idkmkCp.equalsIgnoreCase(idkmk)) {
+    											tmp = "";
+    										}	
+    										StringTokenizer st1 = new StringTokenizer(brs1,",");
+    										st1.nextToken();
+    										idkmkCp = st1.nextToken();
+    									}
+    									else {
+    										if(brs1.startsWith("shift")) {
+    											StringTokenizer st1 = new StringTokenizer(brs1,",");
+        										st1.nextToken();
+        										shiftCp = st1.nextToken();
+        										Vector vKls = (Vector)liCp.next();
+            									ListIterator liKls = vKls.listIterator();
+            									
+            									//boolean first = true;
+            									boolean match = false;
+            									while(liKls.hasNext()) {
+            										if(idkmkCp.equalsIgnoreCase(idkmk)) {
+            											match = true;
+            											brs1 = (String)liKls.next();
+            											if(Checker.isStringNullOrEmpty(tmp)) {
+            												tmp = brs1;
+            											}
+            											else {
+            												tmp = tmp +","+ brs1;
+            											}
+            										}	
+            										else {
+            											liKls.next();
+            										}
+            										//System.out.println(idkmk+" "+shiftCp+" "+brs1);
+            									}
+            									if(match) {
+            										liSdh.set(brs+","+tmp);
+            									}	
+    										}
+    									}
+									}	
+									/*
+									while(liCp.hasNext() && !match) {
+										String idkmkCp = (String)liCp.next();
+										String shiftCp = (String)liCp.next();
+										String noKlsPll = (String)liCp.next();
+									    String currStatus = (String)liCp.next();
+					    				String npmdos = (String)liCp.next();
+					    				String npmasdos = (String)liCp.next();
+					    				
+					    				String canceled =  (String)liCp.next();
+					    				String kodeKelas =  (String)liCp.next();
+					    				String kodeRuang =  (String)liCp.next();
+					    				String kodeGedung =  (String)liCp.next();
+					    				String kodeKampus =  (String)liCp.next();
+					    				String tknDayTime =  (String)liCp.next();
+					    				String nmmdos =  (String)liCp.next();
+					    				String nmmasdos =  (String)liCp.next();
+					    				String enrolled =  (String)liCp.next();
+					    				String max_enrolled =  (String)liCp.next();
+					    				String min_enrolled =  (String)liCp.next();
+					    				
+										String kdkmkCp = (String)liCp.next();
+										String nakmkCp = (String)liCp.next();
+										String skstmCp = (String)liCp.next();
+										String sksprCp = (String)liCp.next();
+										String skslpCp = (String)liCp.next();
+										String kdwplCp = (String)liCp.next();
+										String jenisCp = (String)liCp.next();
+										String stkmkCp = (String)liCp.next();
+										String nodosCp = (String)liCp.next();
+										if(idkmk.equalsIgnoreCase(idkmkCp)&&(v_shift.equalsIgnoreCase(shiftCp))) {
+											match = true;
+											liSdh.set(brs+",avail,"+noKlsPll+","+currStatus+","+npmdos+","+npmasdos+","+canceled+","+kodeKelas+","+kodeRuang+","+kodeGedung+","+kodeKampus+","+tknDayTime+","+nmmdos+","+nmmasdos+","+enrolled+","+max_enrolled+","+min_enrolled);
+										}
+									}
+									*/
+								}	
+							}
+							request.setAttribute("vCp", vCp);
+							//target = Constants.getRootWeb()+"/InnerFrame/Akademik/updFormKrsCp.jsp";
+							/*
+							 * kondisi dimana cp thsmspmb ada tapi butuh isi thsms sebelumnya
+							 */
+							/*
+							String objName = Checker.getObjName(Integer.valueOf(isu.getIdObj()).intValue());
+							System.out.println("objName="+objName);
+							if(objName.equalsIgnoreCase("MHS")) {
+								target = Constants.getRootWeb()+"/InnerFrame/Akademik/updFormKrsCp.jsp";
+							}
+							else {
+								target = Constants.getRootWeb()+"/InnerFrame/Tamplete/setTargetThsmsBasedOnNpmhs.jsp";
+							}
+							*/
+							target = Constants.getRootWeb()+"/InnerFrame/Akademik/updFormKrsCp.jsp";
+							String uri = request.getRequestURI();
+							String url = PathFinder.getPath(uri, target);
+							System.out.println("cmd fwd="+cmd);
+							request.getRequestDispatcher(url+"?objId="+objId+"&nmm="+nmm+"&npm="+npm+"&kdpst="+kdpst+"&objLvl="+obj_lvl+"&fwdTo=/InnerFrame/Akademik/updFormKrsCp.jsp&cmd="+cmd+"&targetThsms="+targetThsms).forward(request,response);
+							//request.getRequestDispatcher(url+"?objId="+objId+"&nmm="+nmm+"&npm="+npm+"&kdpst="+kdpst+"&objLvl="+obj_lvl+"&fwdTo=../Akademik/updFormKrsCp.jsp&cmd="+cmd).forward(request,response);
+							
+						}
+						else {
+							/*
+							 * old style - tanpa class  pool
+							 */
+							//request.setAttribute("vBlmCp", vBlmCp);
+							//request.setAttribute("vSdhCp", vSdhCp);
+							request.setAttribute("vCp", vCp);
+							target = Constants.getRootWeb()+"/InnerFrame/Akademik/updFormKrs.jsp";
+							String uri = request.getRequestURI();
+							String url = PathFinder.getPath(uri, target);
+							request.getRequestDispatcher(url+"?kdpst_nmpst="+kdpst+","+npm+"&cmd="+cmd).forward(request,response);
+					
+						}
+					}	
+					else {
+						System.out.println("okay2");
+						target = Constants.getRootWeb()+"/InnerFrame/Akademik/updFormKrs.jsp";
+						String uri = request.getRequestURI();
+						String url = PathFinder.getPath(uri, target);
+						request.getRequestDispatcher(url+"?kdpst_nmpst="+kdpst+","+npm+"&cmd="+cmd+"&msg=Harap Tentukan Kurikulum Untuk "+nmm+" Terlebih Dahulu").forward(request,response);
+						//out.print("<html>");
+						//out.print("<head>");
+						//out.print("</head>")
+						//out.print("<body>");
+						//out.print("<h2 style=\"align:center\">JUMLAH MATAKULIAH DALAM KURIKULUM = 0 mk, <br/>HARAP MASUKAN MATAKULIAH KE KURIKULUM TERLEBIH DAHULU</h2>");
+						//out.print("</body>");
+						//out.print("</html>");
+						
+					}
+				}	
+			}
+		}	
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request,response);
+	}
+
+}

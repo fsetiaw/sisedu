@@ -1,0 +1,322 @@
+<!DOCTYPE html >
+<html>
+<head>
+<%@ page import="java.util.Vector" %>
+<%@ page import="java.util.StringTokenizer" %>
+<%@ page import="java.util.ListIterator" %>
+<%@ page import="beans.setting.*" %>
+<%@ page import="beans.tools.*" %>
+<%@ page import="java.util.Collections" %>
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/ToUnivSatyagama/forms/simplePmb.css" media="screen" />
+<%
+	System.out.println("pmb1");
+	beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
+	ListIterator li=null;
+%>
+</head>
+<body onload="location.href='#'">
+<%
+int norut = validUsr.isAllowTo("iciv");
+String kdjen = null;
+Vector v_list_shift = new Vector();
+if(norut>0) {
+	String obj_id = request.getParameter("objid_kdpst");
+%>
+<form action="simple.insertCivitasSimple" target="_self" METHOD="GET">
+<table>
+	<tr>
+		<td><label>Tipe Civitas :</label></td>
+		<td>
+			
+			<%
+			//Vector v = validUsr.listObjekYgBolehDiInsertBerdasarHakAksesUser(norut);
+			System.out.println("pmb2");
+			Vector v = validUsr.getScopeUpd7des2012("iciv");
+			System.out.println("pmb3");
+			if(v!=null && v.size()>0) {
+				li = v.listIterator();
+				if(li.hasNext()) {
+					%>
+					<select name="objid_kdpst" onchange='this.form.submit()' style="width:243px">
+						<option value="null">-PILIH-</option>
+					<%
+					while(li.hasNext()) {
+						String baris = (String)li.next();
+						StringTokenizer st = new StringTokenizer(baris);
+						String id_obj = st.nextToken();
+						String kdpst = st.nextToken();
+						String obj_dsc = st.nextToken();
+						String obj_level = st.nextToken();
+						if(obj_id!=null && obj_id.equalsIgnoreCase(id_obj+"-"+kdpst)) {
+							String nmpst_kdjen = Converter.getDetailKdpst(kdpst);
+							st = new StringTokenizer(nmpst_kdjen,"#&");
+							st.nextToken();
+							kdjen = st.nextToken();
+							v_list_shift = Converter.getPilihanShiftYgAktif(kdjen);
+							%>
+							<option value="<%=id_obj %>-<%=kdpst %>" selected><%=obj_dsc.replaceAll("_", " ") %></option>
+							<%	
+						}
+						else {
+							%>
+							<option value="<%=id_obj %>-<%=kdpst %>"><%=obj_dsc.replaceAll("_", " ") %></option>
+							<%	
+						}
+					}
+					%>
+					</select>
+					<%
+				}
+				else {
+					out.print("no akses");
+				}
+			}
+			%>
+		</td>
+	</tr>
+	<%
+	if(obj_id!=null) {
+	%>
+	<tr>
+		<td><label>Angkatan : </label></td>
+		<td>
+			<select name="smawl" style="width:243px">
+			<%
+			String smawl = Checker.getThsmsPmb();
+			String thsms = ""+smawl;
+			v = new Vector();
+			li = v.listIterator();
+			li.add(thsms);
+			for(int i=0;i<30;i++) {
+				thsms = Tool.returnPrevThsmsGiven(thsms);
+				li.add(thsms);
+			}
+			Collections.sort(v);
+			li = v.listIterator();
+			while(li.hasNext()) {
+				thsms = (String)li.next();
+				//String keter_thsms = "N/A";
+				//String value_thsms = "N/A";
+				String keter_thsms_and_value = Converter.convertThsms(thsms);
+				StringTokenizer stt = new StringTokenizer(keter_thsms_and_value,"#&");
+				String keter_thsms = stt.nextToken();
+				String value_thsms = stt.nextToken();
+				if(Tool.isThsmsEqualsSmawl(thsms,smawl)) {
+					
+				%>
+					<option value="<%=value_thsms%>" selected><%=keter_thsms %></option>
+				<%
+				}
+				else {
+				%>
+					<option value="<%=value_thsms%>"><%=keter_thsms %></option>
+				<%	
+				}
+			}
+			%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label>Shift Kelas : </label></td>
+		<td>
+			<select name="shiftKls" style="width:243px">
+			<%
+			if(v_list_shift!=null) {
+				ListIterator li1 = v_list_shift.listIterator();
+				if(v_list_shift.size()>2) {
+					while(li1.hasNext()) {
+						String brs = (String)li1.next();
+						StringTokenizer st= new StringTokenizer(brs,"#&");
+						String keterangan = st.nextToken(); 
+						keterangan = keterangan.toUpperCase();
+						String shift = st.nextToken();
+						String hari = st.nextToken();
+						String konversi_kod = st.nextToken();
+						if(keterangan.equalsIgnoreCase("N/A")) {
+					%>
+						<option value="<%=keterangan%>" selected>--Pilih Shift Kelas--</option>
+					<%
+						}
+						else {
+					%>
+						<option value="<%=keterangan%>"><%=konversi_kod%></option>
+					<%
+						}
+					}	
+				}
+				else {
+					//v size cuma 1 opt = v_size()->2 -->1N/A and the other
+					while(li1.hasNext()) {
+						String brs = (String)li1.next();
+						StringTokenizer st= new StringTokenizer(brs,"#&");
+						String keterangan = st.nextToken(); 
+						keterangan = keterangan.toUpperCase();
+						String shift = st.nextToken();
+						String hari = st.nextToken();
+						String konversi_kod = st.nextToken();
+						if(keterangan.equalsIgnoreCase("N/A")) {
+					%>
+						<option value="<%=keterangan%>" selected>--N/A--</option>
+					<%
+						}
+						else {
+					%>
+						<option value="<%=keterangan%>" selected><%=konversi_kod%></option>
+					<%
+						}
+					}
+				}
+			}
+			else {
+				%>
+				<option value="N/A" selected>--DEFAULT--</option>
+				<%
+			}
+			%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label>Nama : </label></td><td><input type="text" name="nama" /></td>
+	</tr>
+	<tr>
+		<td><label>N.I.M : </label></td><td><input type="text" name="nim" /><br/>NIM diisi bila sudah ada</td>
+	</tr>
+	<tr>
+		<td><label>Pendaftaran Mahasiswa: </label></td>
+		<td><select name="stpid" style="width:243px">
+		<%
+		String []opt=Constants.getTipeCivitas();
+		for(int i=0;i<opt.length;i++) {
+			String tmp = opt[i];
+			StringTokenizer st = new StringTokenizer(tmp);
+			String val = st.nextToken();
+			String ket = st.nextToken();
+		%>
+			<option value="<%=val %>"><%=ket %></option>
+		<%	
+		}
+		%></select></td>
+	</tr>
+	<tr>
+	<td colspan="2" style="text-align:center"><i>------------------- Diisi bila Mahasiswa Pindahan -------------------</i></td>
+	</tr>	
+	<tr>
+	<td style="text-align:center"><label>Asal P.T. Pindahan </label></td>
+	<td><input type="text" name="aspti" value="UNIVERSITAS SATYAGAMA" /></td>
+	</tr>
+	<tr>
+	<td colspan="2" style="text-align:center"><i>------------------------------------------------------------------------------</i></td>
+	</tr>
+	<tr>
+		<td><label>Jenis Kelamin: </label></td>
+		<td>
+		<%
+		//kdjek
+			String[]gender = Constants.getOptionGender();
+		//System.out.println("v_kdjek = "+v_kdjek);
+		%>
+			<select name="kdjek" style="width:243px">
+		<%
+						
+			for(int i=0;i<gender.length;i++) {
+				String baris = gender[i];
+				StringTokenizer st = new StringTokenizer(baris);
+				String val = st.nextToken();
+				String ket = st.nextToken();
+		%>
+				<option value="<%=val %>"><%=ket %></option>
+		<%	
+			}
+		%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label>Kepercayaan: </label></td>
+		<td>
+		<%
+		//kdjek
+			String[]agama = Constants.getOptionAgama();
+		//System.out.println("v_kdjek = "+v_kdjek);
+		%>
+			<select name="agama" style="width:243px">
+		<%
+						
+			for(int i=0;i<agama.length;i++) {
+				String ag = agama[i];
+		%>
+				<option value="<%=ag.toUpperCase() %>"><%=ag %></option>
+		<%	
+			}
+		%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label>Kota Kelahiran : </label></td><td><input type="text" name="tplhr" value="JAKARTA" /></td>
+	</tr>
+	<tr>
+		<td><label>Negara Kelahiran : </label></td>
+		<td>
+		<%
+		//kdneg
+			String negara = Constants.getListNegara();
+			StringTokenizer st = new StringTokenizer(negara,",");
+		//System.out.println("v_kdjek = "+v_kdjek);
+		%>
+			<select name="nglhr" style="width:243px">
+		<%
+			while(st.hasMoreTokens()) {
+				String ctry = st.nextToken();
+				if(ctry.equalsIgnoreCase("indonesia")) {
+		%>
+					<option value="<%=ctry.toUpperCase() %>" selected><%=ctry.toUpperCase() %></option>
+		<%	
+				}
+				else {
+		%>
+					<option value="<%=ctry.toUpperCase() %>"><%=ctry.toUpperCase() %></option>
+		<%
+				}
+			}
+		%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+	<%
+	String browserType = request.getHeader("User-Agent");
+	browserType = browserType.toLowerCase();
+	if(browserType.indexOf("mozilla") > -1) {
+		System.out.println("browserType1=mozilla");
+	}
+	else {
+		if(browserType.indexOf("chrome") > -1) {
+			System.out.println("browserType2=chrome");
+		}
+	}
+	%>
+		<td><label>Tanggal Lahir : </label></td><td><input type="text" name="tglhr" value="dd/mm/yyyy" style="color:grey;font-weight:italic" /></td>
+	</tr>
+	<tr>
+		<td><label>Email </label></td><td><input type="email" name="email" /></td>
+	</tr>
+	<tr>
+		<td><label>HandPhone </label></td><td><input type="number" name="hp" /></td>
+	</tr>
+	<tr>
+		<td><input type="submit" value="Submit" formtarget="_self" /></td>
+	</tr>
+<%
+	}
+%>	
+</table>
+</form>
+<%
+}
+%>
+</body>
+</html>

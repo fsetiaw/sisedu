@@ -1,0 +1,75 @@
+form {
+    width: 650px;
+    padding: 20px;
+    border: 1px solid #270644;
+ 
+    /*** Adding in CSS3 ***/
+ 
+    /*** Rounded Corners ***/
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+ 
+    /*** Background Gradient - 2 declarations one for Firefox and one for Webkit 
+    background:  -moz-linear-gradient(19% 75% 90deg,#4E0085, #963AD6);
+    background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#963AD6), to(#4E0085));
+ 	***/
+ 	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 6%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(0%,rgba(255,255,255,1)), color-stop(6%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    /*** Shadow behind the box 
+    -moz-box-shadow:0px -5px 300px #270644;
+    -webkit-box-shadow:0px -5px 300px #270644;
+    ***/
+}
+input {
+    width: 230px;
+    background: rgba(229,229,229,1);
+    padding: 6px;
+    margin-bottom: 10px;
+    border-top: 1px solid rgba(229,229,229,1);
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 0px;
+ 
+    /*** Adding CSS3 ***/
+ 
+    /*** Transition Selectors - What properties to animate and how long ***/
+    -webkit-transition-property: -webkit-box-shadow, background;
+    -webkit-transition-duration: 0.25s;
+ 
+    /*** Adding a small shadow ***/
+    -moz-box-shadow: 0px 0px 2px #000;
+    -webkit-box-shadow: 0px 0px 2px #000;
+}
+input:hover {
+    -webkit-box-shadow: 0px 0px 4px #000;
+    background: rgba(229,229,229,1);
+}
+input.submit {
+    width: 100px;
+    /*color: #fff;*/
+    text-transform: uppercase;
+    text-shadow: #fff 1px 1px;
+    border-top: 1px solid rgba(229,229,229,1);
+    margin-top: 10px;
+ 
+    /*** Adding CSS3 Gradients 
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#963AD6), to(#781bb9));
+    background:  -moz-linear-gradient(19% 75% 90deg,#781bb9, #963AD6);
+    ***/
+    background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 6%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(0%,rgba(255,255,255,1)), color-stop(6%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(229,229,229,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    
+}
+
