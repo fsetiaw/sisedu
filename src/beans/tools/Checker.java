@@ -1171,7 +1171,7 @@ public static String getRootFolderIndividualMhs(String npmhs) {
     		//ds = (DataSource)envContext.lookup("jdbc/USER");
     		con = ds.getConnection();
     		stmt = con.prepareStatement("SELECT * from mdl_user where username=?");
-    		stmt.setString(1, npmhs+"_Usr");
+    		stmt.setString(1, npmhs+"_usr");
     		ResultSet rs = stmt.executeQuery();
     		if(rs.next()) {
     			pwd = new String(rs.getString("password"));

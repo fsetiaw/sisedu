@@ -42,6 +42,7 @@ public class PrepPengajuanPp_baru extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+		System.out.println("pengajuan pps baru");
 		HttpSession session = request.getSession(true); 
 		InitSessionUsr isu = (InitSessionUsr)session.getAttribute("validUsr"); 
 		if(isu==null) { 
@@ -49,7 +50,7 @@ public class PrepPengajuanPp_baru extends HttpServlet {
 		} 
 		else { 
 		//kode here
-			//System.out.println("pengajuan cuti baru");
+			System.out.println("pengajuan pps baru");
 			String npmhs = request.getParameter("npm");
 			boolean show = false;
 			if(npmhs==null || Checker.isStringNullOrEmpty(npmhs)) {
@@ -107,7 +108,7 @@ public class PrepPengajuanPp_baru extends HttpServlet {
 			Vector v = null;
 			boolean am_i_stu = Checker.am_i_stu(session);
 			//if(am_i_stu) {
-			v = sdc.getStatusCutiRequest_v1(target_thsms, npmhs, show, am_i_stu, boleh_liat_berdasarkan_scope, isu.returnScopeProdiOnlySortByKampusWithListIdobj("cuti") );	
+			//v = sdc.getStatusCutiRequest_v1(target_thsms, npmhs, show, am_i_stu, boleh_liat_berdasarkan_scope, isu.returnScopeProdiOnlySortByKampusWithListIdobj("cuti") );	
 			//}
 			//else {
 			//	v = sdc.getStatusCutiRequest(target_thsms, false);	
@@ -118,7 +119,7 @@ public class PrepPengajuanPp_baru extends HttpServlet {
 			String target = Constants.getRootWeb()+"/InnerFrame/Pengajuan/pindah_prodi/dash_pp_baru.jsp";
 			String uri = request.getRequestURI(); 
 			String url = PathFinder.getPath(uri, target);
-			//request.getRequestDispatcher(url+"?backToHome="+show+"&smawl="+smawl).forward(request,response);
+			request.getRequestDispatcher(url+"?backToHome="+show+"&smawl="+smawl).forward(request,response);
 		}
 	}
 

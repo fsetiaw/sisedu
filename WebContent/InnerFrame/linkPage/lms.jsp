@@ -9,20 +9,21 @@
 <body onload="document.createElement('form').submit.call(document.getElementById('login'))" >
 
 
-<form action="http://localhost/moodle/login/index.php" method="post" name="form" id="login">
+<form action="http://139.162.41.238/moodle/login/index.php" method="post" name="form" id="login">
+<!--  form action="http://localhost/moodle/login/index.php" method="post" name="form" id="login" -->
 <%
 
 beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
-if(validUsr.getObjNickNameGivenObjId().contains("ADMIN") || validUsr.getNpm().equalsIgnoreCase("0000812100004")) {
+if(validUsr.getObjNickNameGivenObjId().contains("ADMIN")) {
 %>
   <p><input type="hidden" name="username" size="15" value="admin_edu"/></p>
-  <p><input type="hidden" name="password" size="15" value="M00dle_dud3"/></p>
+  <p><input type="hidden" name="password" size="15" value="M00dl3_dud3"/></p>
   <!--  p><input type="submit" name="Submit" value="Login" /></p-->
 <%
 }
 else {
 	%>
-	  <p><input type="hidden" name="username" size="15" value="<%=validUsr.getNpm()+"_Usr"%>"/></p>
+	  <p><input type="hidden" name="username" size="15" value="<%=validUsr.getNpm()+"_usr"%>"/></p>
 	  <p><input type="hidden" name="password" size="15" value="<%=validUsr.getNpm()+"_Usr_pwd"%>"/></p>
 	  <!--  p><input type="submit" name="Submit" value="Login" /></p-->
 	<%

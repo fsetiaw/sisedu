@@ -107,7 +107,7 @@ img {
 	clear:both;
 	float:left;
 	width:100%;			/* width of whole page */
-	overflow:auto;		 This chops off any overhanging divs */
+	overflow:auto;		/* This chops off any overhanging divs */
 }
 /* common column settings */
 .colright,

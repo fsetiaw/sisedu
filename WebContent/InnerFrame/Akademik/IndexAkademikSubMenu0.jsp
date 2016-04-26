@@ -73,7 +73,7 @@ if(validUsr1.isAllowTo("mba")>0) {
 }
 
 //if(validUsr1.isAllowTo("lms")>0) {
-if((mdl!=null && !Checker.isStringNullOrEmpty(mdl)) || validUsr1.getObjNickNameGivenObjId().contains("ADMIN") || validUsr1.getNpm().equalsIgnoreCase("0000812100004")) {	
+if((mdl!=null && !Checker.isStringNullOrEmpty(mdl)) || validUsr1.getObjNickNameGivenObjId().contains("ADMIN")) {	
 	if(atMenu!=null && atMenu.equalsIgnoreCase("lms")) {
 %>		
 	<li><a href="go.fwdLink?linkTo=lms" target="_self" class="active">MY<span>MOODLE</b></span></a></li>		

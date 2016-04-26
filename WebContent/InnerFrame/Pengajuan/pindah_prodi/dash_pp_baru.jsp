@@ -14,7 +14,7 @@
 <%@ page import="java.sql.Timestamp" %>
 <%@ page import="java.util.Date" %>
 <%
-////System.out.println("yap1");
+System.out.println("yap1");
 beans.login.InitSessionUsr validUsr = (beans.login.InitSessionUsr)session.getAttribute("validUsr");
 Vector v= null;
 //Vector vThsmsStmhs = (Vector)session.getAttribute("vThsmsStmhs");

@@ -70,6 +70,7 @@
 	LIST SESSION YG JGN Di REMOVE
 	1.ObjGenderAndNickname
 	*/
+	String mdl = null;
 	session.removeAttribute("vHisBea");
 	session.removeAttribute("vListNamaPaketBea");
 	session.removeAttribute("vMhsUnHeregContainment");
@@ -232,10 +233,11 @@
 			<li><a href="get.whoRegister" target="inner_iframe">HEREGISTRASI <span>DAFTAR ULANG</span></a></li>
 			<%
 		}
-		String mdl = Checker.adaDiMoodle(validUsr.getNpm());
-		System.out.println("mdl="+mdl);
+		mdl = Checker.adaDiMoodle(validUsr.getNpm());
+		System.out.println("mdl1="+mdl);
 		Vector vTmp = validUsr.getScopeUpd7des2012("hasAkademikMenu");
-		if((vTmp!=null && vTmp.size()>0) || mdl!=null || validUsr.getNpm().equalsIgnoreCase("0000812100004")) {
+		//if((vTmp!=null && vTmp.size()>0) || mdl!=null || validUsr.getNpm().equalsIgnoreCase("0000812100004")) {
+		if((vTmp!=null && vTmp.size()>0) || mdl!=null) {	
 			target = Constants.getRootWeb()+"/InnerFrame/Akademik/indexAkademik.jsp";
 			uri = request.getRequestURI();
 			//System.out.println(target+" / "+uri);
@@ -557,11 +559,17 @@
 				<!--  p align="center">
 					<a href="http://localhost/moodle/" target="inner_iframe" >lms</a>
 				</p-->
-				<p>
-					<!--  a href="goto.fwdLink?linkTo=moodle" target="inner_iframe">Moodle</a -->
+				<%
+				if(mdl!=null) {	
+				%>
+				<p align="center">
+					<a href="goto.fwdLink?linkTo=lms" target="inner_iframe">Moodle</a>
 					<!--  a href="http://192.168.1.103/moodle/login/index.php" target="inner_iframe">Moodle</a -->
 					
 				</p>
+				<%
+				}
+				%>
 				<p>
 				<!--  iframe id="glu" src="LeftFrame/index.html" seamless="seamless" width="100%" onload="resize_iframe()" name="left_inner_iframe" scrolling="no"></iframe -->
 				<!--  iframe id="glu" src="LeftInnerFrame/home.jsp" seamless="seamless" width="100%" onload="resize_iframe()" name="left_inner_iframe" scrolling="no" height="1000px"></iframe -->

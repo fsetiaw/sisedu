@@ -92,13 +92,13 @@ if(false) {
 		///ToUnivSatyagama/WebContent/InnerFrame/Pengajuan/DashUjianAkhir.jsp
 		
 %>
-	<li><a href="go.moPp?target_thsms=<%=Checker.getThsmsHeregistrasi() %>&id_obj=<%=id_obj%>&nmm=<%=nmm%>&npm=<%=npm %>&obj_lvl=<%=obj_lvl %>&kdpst=<%=kdpst %>&cmd=pp" target="_self" class="active">PINDAH<span>PRODI</span></a></li>
+	<li><a href="go.moPp?target_thsms=<%=Checker.getThsmsHeregistrasi() %>&id_obj=<%=id_obj%>&nmm=<%=nmm%>&npm=<%=npm %>&obj_lvl=<%=obj_lvl %>&kdpst=<%=kdpst %>&cmd=pp" target="_self" class="active">PINDAH<span>PRODI2</span></a></li>
 <%
 					//moCuti = riwayat cuti mhs 
 		}
 		else {
 %>
-	<li><a href="go.moPp?target_thsms=<%=Checker.getThsmsHeregistrasi() %>&id_obj=<%=id_obj%>&nmm=<%=nmm%>&npm=<%=npm %>&obj_lvl=<%=obj_lvl %>&kdpst=<%=kdpst %>&cmd=pp" target="_self">PINDAH<span>PRODI</span></a></li>
+	<li><a href="go.moPp?target_thsms=<%=Checker.getThsmsHeregistrasi() %>&id_obj=<%=id_obj%>&nmm=<%=nmm%>&npm=<%=npm %>&obj_lvl=<%=obj_lvl %>&kdpst=<%=kdpst %>&cmd=pp" target="_self">PINDAH<span>PRODI2</span></a></li>
 <%
 		}	
 	}
