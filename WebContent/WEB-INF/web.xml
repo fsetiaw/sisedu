@@ -846,7 +846,7 @@
   </servlet>
   <servlet>
     <servlet-name>prepAjuanPpBaru</servlet-name>
-    <servlet-class>servlets.pengajuan.PrepPengajuanPp_baru</servlet-class>
+    <servlet-class>servlets.pengajuan.PrepPengajuanPp_new</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>prepBatalCuti</servlet-name>
